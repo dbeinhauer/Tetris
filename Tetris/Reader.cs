@@ -9,14 +9,15 @@ namespace Tetris
     /// <summary>
     /// Class to read the setup file with blocks definition.
     /// </summary>
-    class Reader
+    public class Reader
     {
         // Flag if error during reading happened.
         public bool Error
         {
             get;
             private set;
-        }
+        } = false;
+
 
 
         private string filename = null;
@@ -137,7 +138,7 @@ namespace Tetris
         /// <returns>Initialized GameObject with size or `null` if error happened.</returns>
         private GameObject readObjectSize(decimal gameObjectID)
         {
-            var parsedLine = this.lastLine.Split(' ');
+            var parsedLine = this.lastLine.Trim().Split(' ');
 
             // Size setup consists of 2 parameters, if not -> error
             if (parsedLine.Length != 2)
@@ -149,7 +150,7 @@ namespace Tetris
 
             // If both parameters are integers -> good input (set new GameObject).
             if (int.TryParse(parsedLine[0], out width) && int.TryParse(parsedLine[1], out height))
-                gameObject = new GameObject(height, width, gameObjectID);
+                gameObject = new GameObject(width, height, gameObjectID);
 
             return gameObject;
         }
@@ -165,6 +166,12 @@ namespace Tetris
             // For each line of the object.
             {
                 this.lastLine = this.textReader.ReadLine();
+
+                // Missing row -> error
+                if (this.lastLine == null)
+                    return false;
+
+                this.lastLine = this.lastLine.Trim();
                 
                 // Not long enough line -> error
                 if (this.lastLine.Length < gameObject.Width)

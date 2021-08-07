@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Tetris
 {
-    class GameObject
+    public class GameObject
     {
         // Object bitmap representations.
         static public char emptyChar = '.';

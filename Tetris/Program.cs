@@ -21,7 +21,7 @@ namespace Tetris
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Form1());
 
-            Reader reader = new Reader();
+            Reader reader = new Reader("test.txt");
         }
     }
 }
