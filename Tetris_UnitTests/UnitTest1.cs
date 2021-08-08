@@ -1,9 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-
+using System.Collections.Generic;
+using System.IO;
 using Tetris;
 
 namespace Tetris_UnitTests
@@ -13,7 +10,7 @@ namespace Tetris_UnitTests
     public class ReaderTests
     {
 
-        private void assertAllGameObjects(Dictionary<decimal, GameObject> expected, Dictionary<decimal, GameObject> actual)
+        private void assertAllBlocks(Dictionary<decimal, Block> expected, Dictionary<decimal, Block> actual)
         {
             Assert.AreEqual(expected.Count, actual.Count);
 
@@ -21,21 +18,21 @@ namespace Tetris_UnitTests
             {
                 Assert.IsTrue(actual.ContainsKey(key));
 
-                assertGameObjectsEqual(expected[key], actual[key]);
+                assertBlocksEqual(expected[key], actual[key]);
             }
 
         }
 
-        private void assertGameObjectsEqual(GameObject expected, GameObject actual)
+        private void assertBlocksEqual(Block expected, Block actual)
         {
             Assert.AreEqual(expected.Width, actual.Width);
-            Assert.AreEqual(expected.Heigth, actual.Heigth);
+            Assert.AreEqual(expected.Height, actual.Height);
 
             Assert.AreEqual(expected.Bitmap.Length, actual.Bitmap.Length);
 
             for (int i = 0; i < expected.Width; i++)
             {
-                for (int j = 0; j < expected.Heigth; j++)
+                for (int j = 0; j < expected.Height; j++)
                 {
                     Assert.AreEqual(expected.Bitmap[i, j], actual.Bitmap[i, j]);
                 }
@@ -50,17 +47,17 @@ namespace Tetris_UnitTests
             var stringReader = new StringReader(testInput);
             Reader reader = new Reader(stringReader);
 
-            var expected = new Dictionary<decimal, GameObject>();
+            var expected = new Dictionary<decimal, Block>();
 
-            var expectedGameObject1 = new GameObject(1, 1, 0);
+            var expectedGameObject1 = new Block(1, 1, 0);
             expectedGameObject1.AddBlock(0, 0);
 
             expected.Add(0, expectedGameObject1);
 
 
-            Dictionary<decimal, GameObject> actual = reader.ReadAllGameObjects();
+            Dictionary<decimal, Block> actual = reader.ReadAllBlocks();
 
-            assertAllGameObjects(expected, actual);
+            assertAllBlocks(expected, actual);
         }
 
         [TestMethod]
@@ -71,18 +68,18 @@ namespace Tetris_UnitTests
             var stringReader = new StringReader(testInput);
             Reader reader = new Reader(stringReader);
 
-            var expected = new Dictionary<decimal, GameObject>();
+            var expected = new Dictionary<decimal, Block>();
 
-            var expectedGameObject1 = new GameObject(2, 1, 0);
+            var expectedGameObject1 = new Block(2, 1, 0);
             expectedGameObject1.AddBlock(0, 0);
             expectedGameObject1.AddBlock(1, 0);
 
             expected.Add(0, expectedGameObject1);
 
 
-            Dictionary<decimal, GameObject> actual = reader.ReadAllGameObjects();
+            Dictionary<decimal, Block> actual = reader.ReadAllBlocks();
 
-            assertAllGameObjects(expected, actual);
+            assertAllBlocks(expected, actual);
         }
 
         [TestMethod]
@@ -93,18 +90,18 @@ namespace Tetris_UnitTests
             var stringReader = new StringReader(testInput);
             Reader reader = new Reader(stringReader);
 
-            var expected = new Dictionary<decimal, GameObject>();
+            var expected = new Dictionary<decimal, Block>();
 
-            var expectedGameObject1 = new GameObject(1, 2, 0);
+            var expectedGameObject1 = new Block(1, 2, 0);
             expectedGameObject1.AddBlock(0, 0);
             expectedGameObject1.AddBlock(0, 1);
 
             expected.Add(0, expectedGameObject1);
 
 
-            Dictionary<decimal, GameObject> actual = reader.ReadAllGameObjects();
+            Dictionary<decimal, Block> actual = reader.ReadAllBlocks();
 
-            assertAllGameObjects(expected, actual);
+            assertAllBlocks(expected, actual);
         }
 
         [TestMethod]
@@ -115,9 +112,9 @@ namespace Tetris_UnitTests
             var stringReader = new StringReader(testInput);
             Reader reader = new Reader(stringReader);
 
-            var expected = new Dictionary<decimal, GameObject>();
+            var expected = new Dictionary<decimal, Block>();
 
-            var expectedGameObject1 = new GameObject(3, 2, 0);
+            var expectedGameObject1 = new Block(3, 2, 0);
             expectedGameObject1.AddBlock(0, 0);
             expectedGameObject1.AddBlock(0, 1);
             expectedGameObject1.AddBlock(1, 1);
@@ -126,9 +123,9 @@ namespace Tetris_UnitTests
             expected.Add(0, expectedGameObject1);
 
 
-            Dictionary<decimal, GameObject> actual = reader.ReadAllGameObjects();
+            Dictionary<decimal, Block> actual = reader.ReadAllBlocks();
 
-            assertAllGameObjects(expected, actual);
+            assertAllBlocks(expected, actual);
         }
 
         [TestMethod]
@@ -139,9 +136,9 @@ namespace Tetris_UnitTests
             var stringReader = new StringReader(testInput);
             Reader reader = new Reader(stringReader);
 
-            var expected = new Dictionary<decimal, GameObject>();
+            var expected = new Dictionary<decimal, Block>();
 
-            var expectedGameObject1 = new GameObject(3, 2, 0);
+            var expectedGameObject1 = new Block(3, 2, 0);
             expectedGameObject1.AddBlock(0, 0);
             expectedGameObject1.AddBlock(0, 1);
             expectedGameObject1.AddBlock(1, 1);
@@ -150,9 +147,9 @@ namespace Tetris_UnitTests
             expected.Add(0, expectedGameObject1);
 
 
-            Dictionary<decimal, GameObject> actual = reader.ReadAllGameObjects();
+            Dictionary<decimal, Block> actual = reader.ReadAllBlocks();
 
-            assertAllGameObjects(expected, actual);
+            assertAllBlocks(expected, actual);
         }
 
         [TestMethod]
@@ -163,9 +160,9 @@ namespace Tetris_UnitTests
             var stringReader = new StringReader(testInput);
             Reader reader = new Reader(stringReader);
 
-            var expected = new Dictionary<decimal, GameObject>();
+            var expected = new Dictionary<decimal, Block>();
 
-            var expectedGameObject1 = new GameObject(3, 2, 0);
+            var expectedGameObject1 = new Block(3, 2, 0);
             expectedGameObject1.AddBlock(0, 0);
             expectedGameObject1.AddBlock(0, 1);
             expectedGameObject1.AddBlock(1, 1);
@@ -174,9 +171,9 @@ namespace Tetris_UnitTests
             expected.Add(0, expectedGameObject1);
 
 
-            Dictionary<decimal, GameObject> actual = reader.ReadAllGameObjects();
+            Dictionary<decimal, Block> actual = reader.ReadAllBlocks();
 
-            assertAllGameObjects(expected, actual);
+            assertAllBlocks(expected, actual);
         }
 
         [TestMethod]
@@ -187,9 +184,9 @@ namespace Tetris_UnitTests
             var stringReader = new StringReader(testInput);
             Reader reader = new Reader(stringReader);
 
-            var expected = new Dictionary<decimal, GameObject>();
+            var expected = new Dictionary<decimal, Block>();
 
-            var expectedGameObject1 = new GameObject(3, 2, 0);
+            var expectedGameObject1 = new Block(3, 2, 0);
             expectedGameObject1.AddBlock(0, 0);
             expectedGameObject1.AddBlock(0, 1);
             expectedGameObject1.AddBlock(1, 1);
@@ -198,9 +195,9 @@ namespace Tetris_UnitTests
             expected.Add(0, expectedGameObject1);
 
 
-            Dictionary<decimal, GameObject> actual = reader.ReadAllGameObjects();
+            Dictionary<decimal, Block> actual = reader.ReadAllBlocks();
 
-            assertAllGameObjects(expected, actual);
+            assertAllBlocks(expected, actual);
         }
 
         [TestMethod]
@@ -211,15 +208,15 @@ namespace Tetris_UnitTests
             var stringReader = new StringReader(testInput);
             Reader reader = new Reader(stringReader);
 
-            var expected = new Dictionary<decimal, GameObject>();
+            var expected = new Dictionary<decimal, Block>();
 
-            var expectedGameObject1 = new GameObject(1, 2, 0);
+            var expectedGameObject1 = new Block(1, 2, 0);
             expectedGameObject1.AddBlock(0, 0);
             expectedGameObject1.AddBlock(0, 1);
 
             expected.Add(0, expectedGameObject1);
 
-            var expectedGameObject2 = new GameObject(3, 2, 1);
+            var expectedGameObject2 = new Block(3, 2, 1);
             expectedGameObject2.AddBlock(0, 0);
             expectedGameObject2.AddBlock(1, 0);
             expectedGameObject2.AddBlock(2, 0);
@@ -228,9 +225,9 @@ namespace Tetris_UnitTests
             expected.Add(1, expectedGameObject2);
 
 
-            Dictionary<decimal, GameObject> actual = reader.ReadAllGameObjects();
+            Dictionary<decimal, Block> actual = reader.ReadAllBlocks();
 
-            assertAllGameObjects(expected, actual);
+            assertAllBlocks(expected, actual);
         }
 
         [TestMethod]
@@ -241,15 +238,15 @@ namespace Tetris_UnitTests
             var stringReader = new StringReader(testInput);
             Reader reader = new Reader(stringReader);
 
-            var expected = new Dictionary<decimal, GameObject>();
+            var expected = new Dictionary<decimal, Block>();
 
-            var expectedGameObject1 = new GameObject(1, 2, 0);
+            var expectedGameObject1 = new Block(1, 2, 0);
             expectedGameObject1.AddBlock(0, 0);
             expectedGameObject1.AddBlock(0, 1);
 
             expected.Add(0, expectedGameObject1);
 
-            var expectedGameObject2 = new GameObject(3, 2, 1);
+            var expectedGameObject2 = new Block(3, 2, 1);
             expectedGameObject2.AddBlock(0, 0);
             expectedGameObject2.AddBlock(1, 0);
             expectedGameObject2.AddBlock(2, 0);
@@ -258,9 +255,9 @@ namespace Tetris_UnitTests
             expected.Add(1, expectedGameObject2);
 
 
-            Dictionary<decimal, GameObject> actual = reader.ReadAllGameObjects();
+            Dictionary<decimal, Block> actual = reader.ReadAllBlocks();
 
-            assertAllGameObjects(expected, actual);
+            assertAllBlocks(expected, actual);
         }
 
         [TestMethod]
@@ -271,11 +268,11 @@ namespace Tetris_UnitTests
             var stringReader = new StringReader(testInput);
             Reader reader = new Reader(stringReader);
 
-            var expected = new Dictionary<decimal, GameObject>();
+            var expected = new Dictionary<decimal, Block>();
 
-            Dictionary<decimal, GameObject> actual = reader.ReadAllGameObjects();
+            Dictionary<decimal, Block> actual = reader.ReadAllBlocks();
 
-            assertAllGameObjects(expected, actual);
+            assertAllBlocks(expected, actual);
         }
 
         [TestMethod]
@@ -286,7 +283,7 @@ namespace Tetris_UnitTests
             var stringReader = new StringReader(testInput);
             Reader reader = new Reader(stringReader);
 
-            reader.ReadAllGameObjects();
+            reader.ReadAllBlocks();
 
             Assert.IsTrue(reader.Error);
         }
@@ -299,7 +296,7 @@ namespace Tetris_UnitTests
             var stringReader = new StringReader(testInput);
             Reader reader = new Reader(stringReader);
 
-            reader.ReadAllGameObjects();
+            reader.ReadAllBlocks();
 
             Assert.IsTrue(reader.Error);
         }
@@ -312,7 +309,7 @@ namespace Tetris_UnitTests
             var stringReader = new StringReader(testInput);
             Reader reader = new Reader(stringReader);
 
-            reader.ReadAllGameObjects();
+            reader.ReadAllBlocks();
 
             Assert.IsTrue(reader.Error);
         }
@@ -325,7 +322,7 @@ namespace Tetris_UnitTests
             var stringReader = new StringReader(testInput);
             Reader reader = new Reader(stringReader);
 
-            reader.ReadAllGameObjects();
+            reader.ReadAllBlocks();
 
             Assert.IsTrue(reader.Error);
         }
@@ -338,7 +335,7 @@ namespace Tetris_UnitTests
             var stringReader = new StringReader(testInput);
             Reader reader = new Reader(stringReader);
 
-            reader.ReadAllGameObjects();
+            reader.ReadAllBlocks();
 
             Assert.IsTrue(reader.Error);
         }
