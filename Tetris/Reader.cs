@@ -69,7 +69,7 @@ namespace Tetris
                 if (block == null)
                     return allBlocks;
 
-                //block.InitBorders();
+                block.InitRotationsShapes();
                 allBlocks.Add(id, block);
                 id++;
             }

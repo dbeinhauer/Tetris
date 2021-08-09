@@ -5,40 +5,9 @@ using Tetris;
 
 namespace Tetris_UnitTests
 {
-
     [TestClass]
     public class ReaderTests
     {
-
-        private void assertAllBlocks(Dictionary<decimal, Block> expected, Dictionary<decimal, Block> actual)
-        {
-            Assert.AreEqual(expected.Count, actual.Count);
-
-            foreach (var key in expected.Keys)
-            {
-                Assert.IsTrue(actual.ContainsKey(key));
-
-                assertBlocksEqual(expected[key], actual[key]);
-            }
-
-        }
-
-        private void assertBlocksEqual(Block expected, Block actual)
-        {
-            Assert.AreEqual(expected.Width, actual.Width);
-            Assert.AreEqual(expected.Height, actual.Height);
-
-            Assert.AreEqual(expected.Bitmap.Length, actual.Bitmap.Length);
-
-            for (int i = 0; i < expected.Width; i++)
-            {
-                for (int j = 0; j < expected.Height; j++)
-                {
-                    Assert.AreEqual(expected.Bitmap[i, j], actual.Bitmap[i, j]);
-                }
-            }
-        }
-
         [TestMethod]
         public void ReadAllGameObjects_OnlyOneObject_OneRowOneColumn()
         {
@@ -57,7 +26,7 @@ namespace Tetris_UnitTests
 
             Dictionary<decimal, Block> actual = reader.ReadAllBlocks();
 
-            assertAllBlocks(expected, actual);
+            BlockAsserts.AssertAllBlocks(expected, actual);
         }
 
         [TestMethod]
@@ -79,7 +48,7 @@ namespace Tetris_UnitTests
 
             Dictionary<decimal, Block> actual = reader.ReadAllBlocks();
 
-            assertAllBlocks(expected, actual);
+            BlockAsserts.AssertAllBlocks(expected, actual);
         }
 
         [TestMethod]
@@ -101,7 +70,7 @@ namespace Tetris_UnitTests
 
             Dictionary<decimal, Block> actual = reader.ReadAllBlocks();
 
-            assertAllBlocks(expected, actual);
+            BlockAsserts.AssertAllBlocks(expected, actual);
         }
 
         [TestMethod]
@@ -125,7 +94,7 @@ namespace Tetris_UnitTests
 
             Dictionary<decimal, Block> actual = reader.ReadAllBlocks();
 
-            assertAllBlocks(expected, actual);
+            BlockAsserts.AssertAllBlocks(expected, actual);
         }
 
         [TestMethod]
@@ -149,7 +118,7 @@ namespace Tetris_UnitTests
 
             Dictionary<decimal, Block> actual = reader.ReadAllBlocks();
 
-            assertAllBlocks(expected, actual);
+            BlockAsserts.AssertAllBlocks(expected, actual);
         }
 
         [TestMethod]
@@ -173,7 +142,7 @@ namespace Tetris_UnitTests
 
             Dictionary<decimal, Block> actual = reader.ReadAllBlocks();
 
-            assertAllBlocks(expected, actual);
+            BlockAsserts.AssertAllBlocks(expected, actual);
         }
 
         [TestMethod]
@@ -197,7 +166,7 @@ namespace Tetris_UnitTests
 
             Dictionary<decimal, Block> actual = reader.ReadAllBlocks();
 
-            assertAllBlocks(expected, actual);
+            BlockAsserts.AssertAllBlocks(expected, actual);
         }
 
         [TestMethod]
@@ -227,7 +196,7 @@ namespace Tetris_UnitTests
 
             Dictionary<decimal, Block> actual = reader.ReadAllBlocks();
 
-            assertAllBlocks(expected, actual);
+            BlockAsserts.AssertAllBlocks(expected, actual);
         }
 
         [TestMethod]
@@ -257,7 +226,7 @@ namespace Tetris_UnitTests
 
             Dictionary<decimal, Block> actual = reader.ReadAllBlocks();
 
-            assertAllBlocks(expected, actual);
+            BlockAsserts.AssertAllBlocks(expected, actual);
         }
 
         [TestMethod]
@@ -272,7 +241,7 @@ namespace Tetris_UnitTests
 
             Dictionary<decimal, Block> actual = reader.ReadAllBlocks();
 
-            assertAllBlocks(expected, actual);
+            BlockAsserts.AssertAllBlocks(expected, actual);
         }
 
         [TestMethod]

@@ -14,19 +14,19 @@ namespace Tetris
         public int Height
         {
             get;
-            private set;
+            protected set;
         }
 
         public int Width
         {
             get;
-            private set;
+            protected set;
         }
 
         public char[,] Bitmap
         {
             get;
-            private set;
+            protected set;
         }
 
         /// <summary>
@@ -34,15 +34,13 @@ namespace Tetris
         /// </summary>
         /// <param name="width">Width of the object.</param>
         /// <param name="height">Height of the object.</param>
-        public GameObject(int width, int height) //, decimal id)
+        public GameObject(int width, int height)
         {
             this.Height = height;
             this.Width = width;
 
-            //this.Id = id;
-
             this.Bitmap = new char[width, height];
-            this.initMap(GameObject.EmptyChar);
+            this.initMap(this.Bitmap, GameObject.EmptyChar, this.Width, this.Height);
         }
 
         /// <summary>
@@ -58,14 +56,17 @@ namespace Tetris
         /// <summary>
         /// Initializes the bitmap of the obeject (all positions are empty).
         /// </summary>
+        /// <param name="bitmap">Bitmap to be initialized.</param>
         /// <param name="emptyChar">Character representing empty block.</param>
-        private void initMap(char emptyChar)
+        /// <param name="width">Width of the bitmap.</param>
+        /// <param name="height">Height of the bitmap.</param>
+        protected void initMap(char[,] bitmap, char emptyChar, int width, int height)
         {
-            for (int i = 0; i < this.Width; i++)
+            for (int i = 0; i < width; i++)
             {
-                for (int j = 0; j < this.Height; j++)
+                for (int j = 0; j < height; j++)
                 {
-                    this.Bitmap[i, j] = emptyChar;
+                    bitmap[i, j] = emptyChar;
                 }
             }
         }
