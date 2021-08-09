@@ -10,6 +10,7 @@ namespace Tetris
         Dictionary<decimal, Block> allBlocks;
 
         Block actualBlock;
+        Coordinates actualOffset;
 
         public PlayGround(int width, int height)
         {
@@ -40,15 +41,66 @@ namespace Tetris
 
             // Compute offset of the block to be in the middle of the map
             int centerOffset = (this.map.Width / 2) - (this.actualBlock.Width / 2);
-            Coordinates offset = new Coordinates(centerOffset, 0, this.map.Width);
+            this.actualOffset = new Coordinates(centerOffset, 0, this.map.Width);
 
             // There is not enough space for the block.
-            if (!this.map.CheckBlockPossible(this.actualBlock, offset))
+            if (!this.map.CheckBlockPossible(this.actualBlock, this.actualOffset))
                 return false;
 
-            this.map.AddObject(this.actualBlock, offset);
+            //this.map.AddObject(this.actualBlock, this.actualOffset);
 
             // Adding was succesfull.
+            return true;
+        }
+
+        public bool MoveLeft()
+        {
+            this.actualOffset.X--;
+
+            if (!this.map.CheckBlockPossible(this.actualBlock, this.actualOffset))
+            {
+                this.actualOffset.X++;
+                return false;
+            }
+
+            return true;
+        }
+
+        public bool MoveRight()
+        {
+            this.actualOffset.X++;
+
+            if (!this.map.CheckBlockPossible(this.actualBlock, this.actualOffset))
+            {
+                this.actualOffset.X--;
+                return false;
+            }
+
+            return true;
+        }
+
+        public bool MoveDown()
+        {
+            this.actualOffset.Y++;
+
+            if (!this.map.CheckBlockPossible(this.actualBlock, this.actualOffset))
+            {
+                this.actualOffset.Y--;
+                return false;
+            }
+
+            return true;
+        }
+
+        public bool Rotate()
+        {
+            this.actualBlock.RotateLeft();
+            if (!this.map.CheckBlockPossible(this.actualBlock, this.actualOffset))
+            {
+                this.actualBlock.RotateRight();
+                return false;
+            }
+
             return true;
         }
     }
