@@ -51,30 +51,83 @@ namespace Tetris
         /// Reads all game objects from the given input.
         /// </summary>
         /// <returns>Dictionary of the all game objects, where key is ID of the object and value is its representation.</returns>
-        public Dictionary<decimal, Block> ReadAllBlocks()
+        //public Dictionary<decimal, Block> ReadAllBlocks()
+        public Block[] ReadAllBlocks()
         {
-            decimal id = 0;
-            Dictionary<decimal, Block> allBlocks = new Dictionary<decimal, Block>();
+            //decimal id = 0;
+            //Dictionary<decimal, Block> allBlocks = new Dictionary<decimal, Block>();
 
-            while (!this.Error && this.lastLine != null)
-            // Reads the whole input or until error occurs.
+            Block[] allBlocks = this.readNumBlocks();
+
+            if (allBlocks == null)
             {
-                var block = this.readBlock(id);
+                this.Error = true;
+                return null;
+            }
+
+            for (int i = 0; i < allBlocks.Length; i++)
+            {
+                var block = this.readBlock();//id);
 
                 // Error during the object reading.
                 if (this.Error)
                     return null;
 
-                // End of the input.
+                // Missing part of the input
                 if (block == null)
-                    return allBlocks;
+                {
+                    this.Error = true;
+                    return null;
+                }
+                    //return allBlocks;
 
                 block.InitRotationsShapes();
-                allBlocks.Add(id, block);
-                id++;
+                allBlocks[i] = block;
+                //id++;
             }
 
             return allBlocks;
+
+
+
+            //while (!this.Error && this.lastLine != null)
+            //// Reads the whole input or until error occurs.
+            //{
+            //    var block = this.readBlock();//id);
+
+            //    // Error during the object reading.
+            //    if (this.Error)
+            //        return null;
+
+            //    // End of the input.
+            //    if (block == null)
+            //        return allBlocks;
+
+            //    block.InitRotationsShapes();
+            //    allBlocks.Add(id, block);
+            //    id++;
+            //}
+
+            //return allBlocks;
+        }
+
+        private Block[] readNumBlocks()
+        {
+            this.skipNonSetup();
+
+            if (this.lastLine == null)
+                return null;
+
+            var parsedLine = this.lastLine.Trim().Split(' ');
+
+            int numBlocks;
+
+            if (int.TryParse(parsedLine[0], out numBlocks))
+            {
+                return new Block[numBlocks];
+            }
+
+            return null;
         }
 
         /// <summary>
@@ -83,7 +136,7 @@ namespace Tetris
         /// <param name="id">ID of the current GameObject.</param>
         /// <returns>Returns GameObject sets up from the input representation or 
         /// `null` if end of the input or error happens (if error, then sets `this.Error` to true).</returns>
-        private Block readBlock(decimal id)
+        private Block readBlock()//decimal id)
         {
             this.skipNonSetup();
 
@@ -91,7 +144,7 @@ namespace Tetris
             if (this.lastLine == null)
                 return null;
 
-            Block block = this.readObjectSize(id);
+            Block block = this.readObjectSize();//id);
 
             if (block == null)
             // Error in size setup.
@@ -137,7 +190,7 @@ namespace Tetris
         /// </summary>
         /// <param name="id">ID of the current Block.</param>
         /// <returns>Initialized Block with size or `null` if error happened.</returns>
-        private Block readObjectSize(decimal id)
+        private Block readObjectSize()//decimal id)
         {
             var parsedLine = this.lastLine.Trim().Split(' ');
 
@@ -151,7 +204,7 @@ namespace Tetris
 
             // If both parameters are integers -> good input (set new GameObject).
             if (int.TryParse(parsedLine[0], out width) && int.TryParse(parsedLine[1], out height))
-                block = new Block(width, height, id);
+                block = new Block(width, height);//, id);
 
             return block;
         }

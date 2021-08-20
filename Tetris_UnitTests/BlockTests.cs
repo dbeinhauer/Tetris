@@ -15,7 +15,7 @@ namespace Tetris_UnitTests
         {
             var expected = new char[1, 1] { { '#' } };
 
-            Block testedBlock = new Block(1, 1, 0);
+            Block testedBlock = new Block(1, 1);
             testedBlock.AddBlock(0, 0);
             testedBlock.InitRotationsShapes();
 
@@ -44,7 +44,7 @@ namespace Tetris_UnitTests
             // .
             var expected270 = new char[1, 2] { { '#', '.' } };
 
-            Block testedBlock = new Block(2, 1, 0);
+            Block testedBlock = new Block(2, 1);
             testedBlock.AddBlock(0, 0);
 
 
@@ -75,7 +75,7 @@ namespace Tetris_UnitTests
             // .#
             var expected270 = new char[2, 1] { { '.' }, { '#' } };
 
-            Block testedBlock = new Block(1, 2, 0);
+            Block testedBlock = new Block(1, 2);
             testedBlock.AddBlock(0, 0);
 
 
@@ -110,7 +110,7 @@ namespace Tetris_UnitTests
             // .#
             var expected270 = new char[2, 3] { { '#', '.', '.' }, { '#', '#', '#' } };
 
-            Block testedBlock = new Block(3, 2, 0);
+            Block testedBlock = new Block(3, 2);
             testedBlock.AddBlock(0, 0);
             testedBlock.AddBlock(1, 0);
             testedBlock.AddBlock(2, 0);

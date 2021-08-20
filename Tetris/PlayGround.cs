@@ -6,11 +6,14 @@ namespace Tetris
 {
     public class PlayGround
     {
-        Map map;
-        Dictionary<decimal, Block> allBlocks;
+        public Map map;
+        Block[] allBlocks;
 
-        Block actualBlock;
-        Coordinates actualOffset;
+        public Block actualBlock;
+        public Coordinates actualOffset;
+
+        Block nextBlock;
+        Coordinates nextOffset;
 
         public PlayGround(int width, int height)
         {
@@ -26,31 +29,35 @@ namespace Tetris
             this.allBlocks = reader.ReadAllBlocks();
         }
 
-        /// <summary>
-        /// Adds specific block on the top of the map.
-        /// </summary>
-        /// <param name="blockID">ID of the block to be added.</param>
-        /// <returns>Returns `true` if adding was succesfull, `false` if block does not fit in the map.</returns>
-        public bool AddBlockToMap(decimal blockID)
-        {
-            // Block does not exist
-            if (!this.allBlocks.ContainsKey(blockID))
-                return false;
 
-            this.actualBlock = this.allBlocks[blockID];
+        /// <summary>
+        /// Generates following block and computes its offset to be centered.
+        /// </summary>
+        public void GenerateNextBlock()
+        {
+            this.nextBlock = this.allBlocks[new Random().Next(this.allBlocks.Length)];
 
             // Compute offset of the block to be in the middle of the map
-            int centerOffset = (this.map.Width / 2) - (this.actualBlock.Width / 2);
-            this.actualOffset = new Coordinates(centerOffset, 0, this.map.Width);
+            int centerOffset = (this.map.Width / 2) - (this.nextBlock.Width / 2);
+            this.nextOffset = new Coordinates(centerOffset, 0, this.map.Width);
+        }
 
-            // There is not enough space for the block.
-            if (!this.map.CheckBlockPossible(this.actualBlock, this.actualOffset))
-                return false;
+        /// <summary>
+        /// Checks whether is possible to add `this.nextBlock` in the map
+        /// </summary>
+        /// <returns>Returns `true` if adding is possible, else `false` (Game Over).</returns>
+        public bool CheckGameOver()
+        {
+            if (this.map.CheckBlockPossible(this.nextBlock, this.nextOffset))
+            {
+                this.actualBlock = this.nextBlock;
+                this.actualOffset = this.nextOffset;
+                this.GenerateNextBlock();
 
-            //this.map.AddObject(this.actualBlock, this.actualOffset);
+                return true;
+            }
 
-            // Adding was succesfull.
-            return true;
+            return false;
         }
 
         public bool MoveLeft()

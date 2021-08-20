@@ -1,6 +1,10 @@
+% num_of_blocks
 % width height
 % Bitmap reprezentation ('.' - empty cell, '#' - filled cell)
 % At least one empty line to separate game objects.
+
+6
+
 3 2
 ###
 #..

@@ -9,16 +9,21 @@ namespace Tetris_UnitTests
 {
     static class BlockAsserts
     {
-        public static void AssertAllBlocks(Dictionary<decimal, Block> expected, Dictionary<decimal, Block> actual)
+        public static void AssertAllBlocks(Block[] expected, Block[] actual)
         {
-            Assert.AreEqual(expected.Count, actual.Count);
+            Assert.AreEqual(expected.Length, actual.Length);
 
-            foreach (var key in expected.Keys)
+            for (int i = 0; i < expected.Length; i++)
             {
-                Assert.IsTrue(actual.ContainsKey(key));
-
-                BlockAsserts.AssertBlocksEqual(expected[key], actual[key]);
+                BlockAsserts.AssertBlocksEqual(expected[i], actual[i]);
             }
+
+            //foreach (var key in expected.Keys)
+            //{
+            //    Assert.IsTrue(actual.ContainsKey(key));
+
+            //    BlockAsserts.AssertBlocksEqual(expected[key], actual[key]);
+            //}
 
         }
 

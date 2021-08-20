@@ -2,6 +2,7 @@
 {
     partial class Window
     {
+
         /// <summary>
         ///  Required designer variable.
         /// </summary>
@@ -42,7 +43,7 @@
             // 
             // pGameBoard
             // 
-            this.pGameBoard.Location = new System.Drawing.Point(299, 145);
+            this.pGameBoard.Location = new System.Drawing.Point(292, 151);
             this.pGameBoard.Name = "pGameBoard";
             this.pGameBoard.Size = new System.Drawing.Size(125, 18);
             this.pGameBoard.TabIndex = 0;
@@ -51,7 +52,7 @@
             // lMainTitle
             // 
             this.lMainTitle.AutoSize = true;
-            this.lMainTitle.Location = new System.Drawing.Point(307, 153);
+            this.lMainTitle.Location = new System.Drawing.Point(335, 33);
             this.lMainTitle.Name = "lMainTitle";
             this.lMainTitle.Size = new System.Drawing.Size(44, 20);
             this.lMainTitle.TabIndex = 1;
@@ -60,7 +61,7 @@
             // lGameOver
             // 
             this.lGameOver.AutoSize = true;
-            this.lGameOver.Location = new System.Drawing.Point(315, 161);
+            this.lGameOver.Location = new System.Drawing.Point(590, 198);
             this.lGameOver.Name = "lGameOver";
             this.lGameOver.Size = new System.Drawing.Size(83, 20);
             this.lGameOver.TabIndex = 2;
@@ -68,7 +69,7 @@
             // 
             // bPlayButton
             // 
-            this.bPlayButton.Location = new System.Drawing.Point(307, 153);
+            this.bPlayButton.Location = new System.Drawing.Point(48, 189);
             this.bPlayButton.Name = "bPlayButton";
             this.bPlayButton.Size = new System.Drawing.Size(94, 29);
             this.bPlayButton.TabIndex = 3;
@@ -77,7 +78,7 @@
             // 
             // bEndButton
             // 
-            this.bEndButton.Location = new System.Drawing.Point(315, 161);
+            this.bEndButton.Location = new System.Drawing.Point(602, 302);
             this.bEndButton.Name = "bEndButton";
             this.bEndButton.Size = new System.Drawing.Size(94, 29);
             this.bEndButton.TabIndex = 4;
@@ -86,7 +87,7 @@
             // 
             // bLoadBlocks
             // 
-            this.bLoadBlocks.Location = new System.Drawing.Point(323, 169);
+            this.bLoadBlocks.Location = new System.Drawing.Point(315, 302);
             this.bLoadBlocks.Name = "bLoadBlocks";
             this.bLoadBlocks.Size = new System.Drawing.Size(94, 29);
             this.bLoadBlocks.TabIndex = 5;
@@ -95,7 +96,7 @@
             // 
             // tbLoadingBlocksTextBox
             // 
-            this.tbLoadingBlocksTextBox.Location = new System.Drawing.Point(331, 177);
+            this.tbLoadingBlocksTextBox.Location = new System.Drawing.Point(292, 380);
             this.tbLoadingBlocksTextBox.Name = "tbLoadingBlocksTextBox";
             this.tbLoadingBlocksTextBox.Size = new System.Drawing.Size(125, 27);
             this.tbLoadingBlocksTextBox.TabIndex = 6;
@@ -103,7 +104,7 @@
             // lPoints
             // 
             this.lPoints.AutoSize = true;
-            this.lPoints.Location = new System.Drawing.Point(339, 185);
+            this.lPoints.Location = new System.Drawing.Point(73, 251);
             this.lPoints.Name = "lPoints";
             this.lPoints.Size = new System.Drawing.Size(51, 20);
             this.lPoints.TabIndex = 7;
@@ -113,7 +114,7 @@
             // 
             this.lLoadingBlocksLabel.AutoSize = true;
             this.lLoadingBlocksLabel.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.lLoadingBlocksLabel.Location = new System.Drawing.Point(347, 193);
+            this.lLoadingBlocksLabel.Location = new System.Drawing.Point(221, 348);
             this.lLoadingBlocksLabel.Name = "lLoadingBlocksLabel";
             this.lLoadingBlocksLabel.Size = new System.Drawing.Size(331, 20);
             this.lLoadingBlocksLabel.TabIndex = 8;

@@ -8,7 +8,7 @@ namespace Tetris
     {
         public GameManager()
         {
-
+        
         }
 
 

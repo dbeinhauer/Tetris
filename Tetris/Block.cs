@@ -15,11 +15,11 @@ namespace Tetris
     public class Block : GameObject
     {
         // ID of the object.
-        public decimal Id
-        {
-            get;
-            private set;
-        }
+        //public decimal Id
+        //{
+        //    get;
+        //    private set;
+        //}
 
        
         public Rotation ActualRotation
@@ -49,9 +49,9 @@ namespace Tetris
 
 
 
-        public Block(int width, int height, decimal id) : base(width, height)
+        public Block(int width, int height) : base(width, height)
         {
-            this.Id = id;
+            //this.Id = id;
             this.ActualRotation = Rotation.ROTATION_0;
         }
 
