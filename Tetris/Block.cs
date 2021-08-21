@@ -161,7 +161,7 @@ namespace Tetris
                 for (int x = 0; x < this.Width; x++)
                 {
                     int reversedX = this.Width - x - 1;
-                    int reversedY = this.Height - y - 1; ;
+                    int reversedY = this.Height - y - 1;
 
                     // after rotation to left:   from (x, y) -> (y, reversed x)
                     // Where:       reversed x = (maximal x coordinate) - (actual x)

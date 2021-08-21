@@ -40,8 +40,8 @@ namespace Tetris
         public bool CheckBlockPossible(Block block, Coordinates offset)
         {
             // Overflow of the map borders -> not possible
-            if ((block.Width + offset.X >= this.Width) ||
-                (block.Height + offset.Y >= this.Height))
+            if ((block.Width + offset.X > this.Width) ||
+                (block.Height + offset.Y > this.Height))
                 return false;
 
             for (int i = 0; i < block.Height; i++)

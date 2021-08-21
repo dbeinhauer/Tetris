@@ -26,8 +26,10 @@ namespace Tetris
 
 
         Timer timer = new Timer();
+        Timer timerHandling = new Timer();
         public Window()
         {
+            this.KeyPreview = true;
             InitializeComponent();
 
             this.mapOffset = new Coordinates(0, 0, this.mapWidth);
@@ -45,7 +47,11 @@ namespace Tetris
             timer.Interval = 500;
             timer.Start();
 
-            this.drawShape(this.playGround.actualBlock, this.playGround.actualOffset);
+            timerHandling.Tick += TimerHandling_Tick;
+
+            this.KeyDown += Window_KeyDown;
+
+            //this.drawShape(this.playGround.actualBlock, this.playGround.actualOffset);
         }
 
         private void Timer_Tick(object sender, EventArgs e)
@@ -65,11 +71,60 @@ namespace Tetris
                 // get next shape
                 this.playGround.GenerateNextBlock();
                 this.playGround.CheckGameOver();
-                this.drawShape(this.playGround.map, this.mapOffset);
+
+                //this.playGround.PrintMap();
+
+                //this.drawShape(this.playGround.map, this.mapOffset);
                 //currentShape = getRandomShapeWithCenterAligned();
             }
             this.drawShape(this.playGround.actualBlock, this.playGround.actualOffset);
         }
+
+        private void TimerHandling_Tick(object sender, EventArgs e)
+
+        {
+
+        }
+
+        private void Window_KeyDown(object sender, KeyEventArgs e)
+        {
+
+            // calculate the vertical and horizontal move values
+            // based on the key pressed
+            switch (e.KeyCode)
+            {
+                // move shape left
+                case Keys.Left:
+                    this.playGround.MoveLeft();
+                    break;
+
+                // move shape right
+                case Keys.Right:
+                    this.playGround.MoveRight();
+                    break;
+
+                // move shape down faster
+                case Keys.Down:
+                    this.playGround.MoveRight();
+                    break;
+
+                // rotate the shape clockwise
+                case Keys.Up:
+                    this.playGround.Rotate();
+                    break;
+
+                default:
+                    return;
+            }
+
+            //var isMoveSuccess = moveShapeIfPossible(horizontalMove, verticalMove);
+
+            //// if the player was trying to rotate the shape, but
+            //// that move was not possible - rollback the shape
+            //if (!isMoveSuccess && e.KeyCode == Keys.Up)
+            //    currentShape.rollback();
+        }
+
 
         private void loadcanvas()
         {
@@ -92,7 +147,7 @@ namespace Tetris
         Bitmap workingBitmap;
         Graphics workingGraphics;
 
-        private void drawShape(GameObject gameObject, Coordinates offset)
+        private void drawShape(Block gameObject, Coordinates offset)
         {
             workingBitmap = new Bitmap(canvasBitmap);
             workingGraphics = Graphics.FromImage(workingBitmap);
@@ -101,8 +156,8 @@ namespace Tetris
             {
                 for (int j = 0; j < gameObject.Width; j++)
                 {
-                    if (gameObject.Bitmap[j, i] == GameObject.FullChar)
-                        workingGraphics.FillRectangle(Brushes.Black, (offset.X + i) * dotSize, (offset.Y + j) * dotSize, dotSize, dotSize);
+                    if (gameObject.GetBitmapToCheck()[j,i] == GameObject.FullChar)
+                        workingGraphics.FillRectangle(Brushes.Black, (offset.X + j) * dotSize, (offset.Y + i) * dotSize, dotSize, dotSize);
                     //else
                     //    workingGraphics.FillRectangle(Brushes.LightGray, (offset.X + i) * dotSize, (offset.Y + j) * dotSize, dotSize, dotSize);
                 }
@@ -110,6 +165,8 @@ namespace Tetris
 
             pGameBoard.Image = workingBitmap;
         }
+
+        //private void drawMap()
 
     }
 }

@@ -37,6 +37,14 @@ namespace Tetris
         {
             this.nextBlock = this.allBlocks[new Random().Next(this.allBlocks.Length)];
 
+            // Rnadomly rotate the object
+            int numRotationsLeft = new Random().Next(4);
+
+            for (int i = 0; i < numRotationsLeft; i++)
+            {
+                this.nextBlock.RotateLeft();
+            }
+
             // Compute offset of the block to be in the middle of the map
             int centerOffset = (this.map.Width / 2) - (this.nextBlock.Width / 2);
             this.nextOffset = new Coordinates(centerOffset, 0, this.map.Width);
@@ -109,6 +117,19 @@ namespace Tetris
             }
 
             return true;
+        }
+
+        public void PrintMap()
+        {
+            for (int i = 0; i < this.map.Height; i++)
+            {
+                for (int j = 0; j < this.map.Width; j++)
+                {
+                    Console.Write(this.map.Bitmap[j, i]);
+                }
+                Console.WriteLine();
+            }
+            Console.WriteLine();
         }
     }
 }

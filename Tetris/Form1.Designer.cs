@@ -136,6 +136,7 @@
             this.Controls.Add(this.pGameBoard);
             this.Name = "Window";
             this.Text = "Form1";
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Window_KeyDown);
             ((System.ComponentModel.ISupportInitialize)(this.pGameBoard)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
