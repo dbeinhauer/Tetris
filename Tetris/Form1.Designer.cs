@@ -38,7 +38,12 @@
             this.tbLoadingBlocksTextBox = new System.Windows.Forms.TextBox();
             this.lPoints = new System.Windows.Forms.Label();
             this.lLoadingBlocksLabel = new System.Windows.Forms.Label();
+            this.pNextBlock = new System.Windows.Forms.PictureBox();
+            this.lNextBlock = new System.Windows.Forms.Label();
+            this.bReturn = new System.Windows.Forms.Button();
+            this.lErrorMessage = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pGameBoard)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pNextBlock)).BeginInit();
             this.SuspendLayout();
             // 
             // pGameBoard
@@ -61,7 +66,7 @@
             // lGameOver
             // 
             this.lGameOver.AutoSize = true;
-            this.lGameOver.Location = new System.Drawing.Point(590, 198);
+            this.lGameOver.Location = new System.Drawing.Point(314, 252);
             this.lGameOver.Name = "lGameOver";
             this.lGameOver.Size = new System.Drawing.Size(83, 20);
             this.lGameOver.TabIndex = 2;
@@ -69,62 +74,107 @@
             // 
             // bPlayButton
             // 
-            this.bPlayButton.Location = new System.Drawing.Point(48, 189);
+            this.bPlayButton.Location = new System.Drawing.Point(303, 189);
             this.bPlayButton.Name = "bPlayButton";
             this.bPlayButton.Size = new System.Drawing.Size(94, 29);
             this.bPlayButton.TabIndex = 3;
             this.bPlayButton.Text = "Play";
             this.bPlayButton.UseVisualStyleBackColor = true;
+            this.bPlayButton.Click += new System.EventHandler(this.bPlayButton_Click);
             // 
             // bEndButton
             // 
-            this.bEndButton.Location = new System.Drawing.Point(602, 302);
+            this.bEndButton.Location = new System.Drawing.Point(303, 305);
             this.bEndButton.Name = "bEndButton";
             this.bEndButton.Size = new System.Drawing.Size(94, 29);
             this.bEndButton.TabIndex = 4;
             this.bEndButton.Text = "End Game";
             this.bEndButton.UseVisualStyleBackColor = true;
+            this.bEndButton.Click += new System.EventHandler(this.bEndButton_Click);
             // 
             // bLoadBlocks
             // 
-            this.bLoadBlocks.Location = new System.Drawing.Point(315, 302);
+            this.bLoadBlocks.Location = new System.Drawing.Point(303, 248);
             this.bLoadBlocks.Name = "bLoadBlocks";
             this.bLoadBlocks.Size = new System.Drawing.Size(94, 29);
             this.bLoadBlocks.TabIndex = 5;
             this.bLoadBlocks.Text = "Load Blocks";
             this.bLoadBlocks.UseVisualStyleBackColor = true;
+            this.bLoadBlocks.Click += new System.EventHandler(this.bLoadBlocks_Click);
             // 
             // tbLoadingBlocksTextBox
             // 
-            this.tbLoadingBlocksTextBox.Location = new System.Drawing.Point(292, 380);
+            this.tbLoadingBlocksTextBox.Location = new System.Drawing.Point(292, 275);
             this.tbLoadingBlocksTextBox.Name = "tbLoadingBlocksTextBox";
             this.tbLoadingBlocksTextBox.Size = new System.Drawing.Size(125, 27);
             this.tbLoadingBlocksTextBox.TabIndex = 6;
+            this.tbLoadingBlocksTextBox.Enter += new System.EventHandler(this.tbLoadingBlocksTextBox_Enter);
             // 
             // lPoints
             // 
             this.lPoints.AutoSize = true;
-            this.lPoints.Location = new System.Drawing.Point(73, 251);
+            this.lPoints.Location = new System.Drawing.Point(73, 248);
             this.lPoints.Name = "lPoints";
             this.lPoints.Size = new System.Drawing.Size(51, 20);
             this.lPoints.TabIndex = 7;
             this.lPoints.Text = "Points:";
+            this.lPoints.Click += new System.EventHandler(this.lPoints_Click);
             // 
             // lLoadingBlocksLabel
             // 
             this.lLoadingBlocksLabel.AutoSize = true;
             this.lLoadingBlocksLabel.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.lLoadingBlocksLabel.Location = new System.Drawing.Point(221, 348);
+            this.lLoadingBlocksLabel.Location = new System.Drawing.Point(201, 225);
             this.lLoadingBlocksLabel.Name = "lLoadingBlocksLabel";
             this.lLoadingBlocksLabel.Size = new System.Drawing.Size(331, 20);
             this.lLoadingBlocksLabel.TabIndex = 8;
             this.lLoadingBlocksLabel.Text = "Insert name of file where block reprezentation is:";
+            // 
+            // pNextBlock
+            // 
+            this.pNextBlock.Location = new System.Drawing.Point(626, 121);
+            this.pNextBlock.Name = "pNextBlock";
+            this.pNextBlock.Size = new System.Drawing.Size(125, 62);
+            this.pNextBlock.TabIndex = 9;
+            this.pNextBlock.TabStop = false;
+            // 
+            // lNextBlock
+            // 
+            this.lNextBlock.AutoSize = true;
+            this.lNextBlock.Location = new System.Drawing.Point(652, 81);
+            this.lNextBlock.Name = "lNextBlock";
+            this.lNextBlock.Size = new System.Drawing.Size(83, 20);
+            this.lNextBlock.TabIndex = 10;
+            this.lNextBlock.Text = "Next Block:";
+            // 
+            // bReturn
+            // 
+            this.bReturn.Location = new System.Drawing.Point(576, 331);
+            this.bReturn.Name = "bReturn";
+            this.bReturn.Size = new System.Drawing.Size(94, 29);
+            this.bReturn.TabIndex = 11;
+            this.bReturn.Text = "Return";
+            this.bReturn.UseVisualStyleBackColor = true;
+            this.bReturn.Click += new System.EventHandler(this.bReturn_Click);
+            // 
+            // lErrorMessage
+            // 
+            this.lErrorMessage.AutoSize = true;
+            this.lErrorMessage.Location = new System.Drawing.Point(201, 103);
+            this.lErrorMessage.Name = "lErrorMessage";
+            this.lErrorMessage.Size = new System.Drawing.Size(341, 20);
+            this.lErrorMessage.TabIndex = 12;
+            this.lErrorMessage.Text = "Bad Game Block Format!\\nPlease load correct file.";
             // 
             // Window
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(782, 753);
+            this.Controls.Add(this.lErrorMessage);
+            this.Controls.Add(this.bReturn);
+            this.Controls.Add(this.lNextBlock);
+            this.Controls.Add(this.pNextBlock);
             this.Controls.Add(this.lLoadingBlocksLabel);
             this.Controls.Add(this.lPoints);
             this.Controls.Add(this.tbLoadingBlocksTextBox);
@@ -138,6 +188,7 @@
             this.Text = "Form1";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Window_KeyDown);
             ((System.ComponentModel.ISupportInitialize)(this.pGameBoard)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pNextBlock)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -154,6 +205,10 @@
         private System.Windows.Forms.TextBox tbLoadingBlocksTextBox;
         private System.Windows.Forms.Label lPoints;
         private System.Windows.Forms.Label lLoadingBlocksLabel;
+        private System.Windows.Forms.PictureBox pNextBlock;
+        private System.Windows.Forms.Label lNextBlock;
+        private System.Windows.Forms.Button bReturn;
+        private System.Windows.Forms.Label lErrorMessage;
     }
 }
 

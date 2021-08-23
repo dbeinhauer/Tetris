@@ -6,6 +6,12 @@ namespace Tetris
 {
     public class Map : GameObject
     {
+        public int score
+        {
+            get;
+            private set;
+        } = 0;
+
         public Map(int width, int height) : base(width, height)
         {
 
@@ -31,6 +37,12 @@ namespace Tetris
             }
         }
 
+        public void ResetGame()
+        {
+            this.initMap(this.Bitmap, GameObject.EmptyChar, this.Width, this.Height);
+            this.score = 0;
+        }
+
         /// <summary>
         /// Checks whether is possible to place the `block` on the map with gíven `offset`. 
         /// </summary>
@@ -41,7 +53,9 @@ namespace Tetris
         {
             // Overflow of the map borders -> not possible
             if ((block.Width + offset.X > this.Width) ||
-                (block.Height + offset.Y > this.Height))
+                (block.Height + offset.Y > this.Height) || 
+                offset.X < 0 || 
+                offset.Y < 0)
                 return false;
 
             for (int i = 0; i < block.Height; i++)
@@ -77,6 +91,7 @@ namespace Tetris
                 {
                     this.movePartDown(i);
                     wasMoved = true;
+                    this.score++;
                 }
             }
 

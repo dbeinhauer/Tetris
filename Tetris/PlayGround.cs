@@ -12,7 +12,7 @@ namespace Tetris
         public Block actualBlock;
         public Coordinates actualOffset;
 
-        Block nextBlock;
+        public Block nextBlock;
         Coordinates nextOffset;
 
         public PlayGround(int width, int height)
@@ -109,10 +109,10 @@ namespace Tetris
 
         public bool Rotate()
         {
-            this.actualBlock.RotateLeft();
+            this.actualBlock.RotateRight();
             if (!this.map.CheckBlockPossible(this.actualBlock, this.actualOffset))
             {
-                this.actualBlock.RotateRight();
+                this.actualBlock.RotateLeft();
                 return false;
             }
 

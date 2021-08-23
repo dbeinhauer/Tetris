@@ -35,7 +35,18 @@ namespace Tetris
         {
             this.filename = filename;
 
-            this.textReader = new StreamReader(filename);
+            try
+            {
+                this.textReader = new StreamReader(filename);
+            }
+            catch (IOException)
+            {
+                this.Error = true;
+            }
+            catch (UnauthorizedAccessException)
+            {
+                this.Error = true;
+            }
         }
 
         /// <summary>

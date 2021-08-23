@@ -3,32 +3,21 @@
 % Bitmap reprezentation ('.' - empty cell, '#' - filled cell)
 % At least one empty line to separate game objects.
 
-7
+4
 
-3 2
+3 3
 ###
-#..
-
-3 2
+#.#
 ###
-..#
 
-3 2
-.##
-##.
-
-3 2
-##.
-.##
-
-4 1
-####
+1 1
+#
 
 2 2
 ##
-##
+#.
 
 3 2
+#.#
 .#.
-###
 

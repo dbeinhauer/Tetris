@@ -165,9 +165,11 @@ namespace Tetris
 
                     // after rotation to left:   from (x, y) -> (y, reversed x)
                     // Where:       reversed x = (maximal x coordinate) - (actual x)
+                    //this.Bitmap90[y, reversedX] = this.Bitmap[x, y];
                     this.Bitmap90[y, reversedX] = this.Bitmap[x, y];
                     this.Bitmap180[reversedX, reversedY] = this.Bitmap[x, y];
-                    this.Bitmap270[reversedY, x]  = this.Bitmap[x, y];
+                    this.Bitmap270[reversedY, x] = this.Bitmap[x, y];
+                    //this.Bitmap270[reversedY, x]  = this.Bitmap[x, y];
                 }
             }
         }
