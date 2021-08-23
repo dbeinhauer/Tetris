@@ -1,4 +1,4 @@
-/bin/*
-/usr/*
-/obj/*
-/.vs/*
+*/bin/*
+*/usr/*
+*/obj/*
+*/.vs/*
