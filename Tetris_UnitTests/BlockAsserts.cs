@@ -17,14 +17,6 @@ namespace Tetris_UnitTests
             {
                 BlockAsserts.AssertBlocksEqual(expected[i], actual[i]);
             }
-
-            //foreach (var key in expected.Keys)
-            //{
-            //    Assert.IsTrue(actual.ContainsKey(key));
-
-            //    BlockAsserts.AssertBlocksEqual(expected[key], actual[key]);
-            //}
-
         }
 
         public static void AssertBlocksEqual(Block expected, Block actual)

@@ -79,14 +79,18 @@ namespace Tetris
             InitializeComponent();
             this.KeyDown += Window_KeyDown;
 
+
+            // Init timers
             this.timerFalling.Tick += timerFalling_Tick;
 
-            this.timerHandling.Tick += TimerHandling_Tick;
+            this.timerHandling.Tick += timerHandling_Tick;
             this.timerHandling.Interval = timerHandlingInterval;
+
 
             // Init window layout and game state
             this.gameState = GameState.START;
             this.manageLayout();
+
 
             // Use deafault settings of the map and blocks
             Reader reader = new Reader(Window.filenameObjects);
@@ -291,6 +295,256 @@ namespace Tetris
 
 
         /// <summary>
+        /// Loads canvas reprezenting the playboard.
+        /// </summary>
+        private void loadCanvas()
+        {
+            // Resize the picture box based on the dotsize and canvas size.
+            this.pGameBoard.Width = this.mapWidth * this.dotSize;
+            this.pGameBoard.Height = this.mapHeight * this.dotSize;
+
+            // Create bitmap with picture box's size.
+            this.canvasBitmap = new Bitmap(this.pGameBoard.Width, 
+                                            this.pGameBoard.Height);
+
+            this.canvasGraphics = Graphics.FromImage(this.canvasBitmap);
+
+            this.canvasGraphics.FillRectangle(Brushes.LightSteelBlue, 0, 0,
+                            this.canvasBitmap.Width, this.canvasBitmap.Height);
+
+            // Load bitmap into picture box.
+            this.pGameBoard.Image = this.canvasBitmap;
+        }
+
+
+        /// <summary>
+        /// Manages loading blocks reprezentation from the specific file.
+        /// </summary>
+        private void manageFileLoadingBlocks()
+        {
+            // Get the filename from the user. 
+            string filename = this.getReaderFile();
+
+            if (filename == null)
+            // Bad user input file -> Error
+            {
+                this.gameState = GameState.ERROR_BLOCKS;
+                return;
+            }
+
+            // Loading objects succesfull -> Return to Start Menu
+            if (this.loadGameObjects(new Reader(filename)))
+                this.gameState = GameState.START;
+        }
+
+
+        /// <summary>
+        /// Manages loading map reprezentation from the specific file.
+        /// </summary>
+        private void manageFileLoadingMap()
+        {
+            // Get the filename from the user. 
+            string filename = this.getReaderFile();
+
+            if (filename == null)
+            // Bad user input file -> Error
+            {
+                this.gameState = GameState.ERROR_MAP;
+                return;
+            }
+
+            // Loading map succesfull -> Return to Start Menu
+            if (this.loadMap(new Reader(filename)))
+                this.gameState = GameState.START;
+        }
+
+
+        /// <summary>
+        /// Opens Dialog Window and gets filename from user.
+        /// </summary>
+        /// <returns>Filename from the user (`null` if bad input).</returns>
+        private string getReaderFile()
+        {
+            OpenFileDialog openFileDialog1 = new OpenFileDialog();
+            // Show the dialog.
+            DialogResult result = openFileDialog1.ShowDialog();
+            if (result == DialogResult.OK)
+            // Result Ok -> return filename
+            {
+                return openFileDialog1.FileName;
+            }
+
+            // Bad result.
+            return null;
+        }
+
+
+        /// <summary>
+        /// Loads Game Objects from the reader.
+        /// </summary>
+        /// <param name="reader">Reader to load object reprezentation.</param>
+        /// <returns>Returns `true` if loading was successful, else `false`.</returns>
+        private bool loadGameObjects(Reader reader)
+        {
+            if (reader.Error)
+            // Problem with opening the file -> Error
+            {
+                this.gameState = GameState.ERROR_BLOCKS;
+                return false;
+            }
+
+            this.playGround.LoadGameObjects(reader);
+
+            if (reader.Error)
+            // Bad file format -> Error
+            {
+                this.gameState = GameState.ERROR_BLOCKS;
+                return false;
+            }
+
+            // Loading successful.
+            return true;
+        }
+
+
+        /// <summary>
+        /// Loads map from the reader.
+        /// </summary>
+        /// <param name="reader">Reader to load map reprezentation.</param>
+        /// <returns>Returns `true` if loading was succesful, else `false`.</returns>
+        private bool loadMap(Reader reader)
+        {
+            if (reader.Error)
+            // Problem with opening the file -> Error
+            {
+                this.gameState = GameState.ERROR_MAP;
+                return false;
+            }
+
+            this.playGround.map.ResetGame();
+
+            if (!reader.ReadMap(this.playGround.map))
+            // Bad file format -> Error
+            {
+                this.gameState = GameState.ERROR_MAP;
+                return false;
+            }
+
+            this.playGround.map.SetActualDefault();
+
+            // Loading successful.
+            return true;
+        }
+
+
+        /// <summary>
+        /// Draws playground map on the canvas.
+        /// </summary>
+        private void drawMap()
+        {
+            var bitmap = new Bitmap(this.canvasBitmap);
+            var graphics = Graphics.FromImage(bitmap);
+
+            for (int i = 0; i < this.playGround.map.Height; i++)
+            {
+                for (int j = 0; j < this.playGround.map.Width; j++)
+                {
+                    graphics.FillRectangle(
+                        this.playGround.map.Bitmap[j, i] == GameObject.FullChar
+                        ? Brushes.Black : Brushes.LightSteelBlue,
+                        j * this.dotSize, i * this.dotSize, this.dotSize, this.dotSize);
+                }
+            }
+
+            this.canvasBitmap = new Bitmap(bitmap);
+        }
+
+
+        /// <summary>
+        /// Draws given game object on the canvas (based on the `offset`).
+        /// </summary>
+        /// <param name="gameObject">Block to be drawn on the canvas.</param>
+        /// <param name="offset">Offset of the top-left corners of map and `gameObject`. </param>
+        private void drawShape(Block gameObject, Coordinates offset)
+        {
+            this.workingBitmap = new Bitmap(this.canvasBitmap);
+            this.workingGraphics = Graphics.FromImage(this.workingBitmap);
+
+            for (int i = 0; i < gameObject.Height; i++)
+            {
+                for (int j = 0; j < gameObject.Width; j++)
+                {
+                    // Filled cell (draw it on the canvas).
+                    if (gameObject.GetBitmapToCheck()[j,i] == GameObject.FullChar)
+                        this.workingGraphics.FillRectangle(Brushes.Black, 
+                                            (offset.X + j) * this.dotSize,
+                                            (offset.Y + i) * this.dotSize,
+                                            this.dotSize, this.dotSize);
+                }
+            }
+
+            this.pGameBoard.Image = this.workingBitmap;
+        }
+
+
+        /// <summary>
+        /// Draws next shape into its own canvas (not playground).
+        /// </summary>
+        /// <param name="nextBlock">Block to be drawn.</param>
+        private void drawNextShape(Block nextBlock)
+        {
+            // Initialize canvas.
+            this.nextShapeGraphics.FillRectangle(Brushes.LightSteelBlue, 0, 0,
+                            this.nextShapeBitmap.Width, this.nextShapeBitmap.Height);
+
+            // Find the ideal position for the shape in the side panel.
+            var startX = (6 - nextBlock.Width) / 2;
+            var startY = (6 - nextBlock.Height) / 2;
+
+            for (int i = 0; i < nextBlock.Height; i++)
+            {
+                for (int j = 0; j < nextBlock.Width; j++)
+                {
+                    nextShapeGraphics.FillRectangle(
+                        nextBlock.GetBitmapToCheck()[j, i] == GameObject.FullChar 
+                        ? Brushes.Black : Brushes.LightSteelBlue,
+                        (startX + j) * dotSize,
+                        (startY + i) * dotSize,
+                        dotSize, dotSize);
+                }
+            }
+
+            this.pNextBlock.Size = this.nextShapeBitmap.Size;
+            this.pNextBlock.Image = this.nextShapeBitmap;
+        }
+
+
+        /// <summary>
+        /// Checks whether some rows are filled and updates score and falling speed.
+        /// </summary>
+        private void checkFilledRows()
+        {
+            if (this.playGround.map.ManageFilledRows())
+            // Some rows were filled -> update data
+            {
+                this.drawMap();
+                this.lPoints.Text = Window.scoreText + this.playGround.map.score;
+                this.timerFalling.Interval -= 10;
+            }
+        }
+
+
+        /// <summary>
+        /// Executed when Game Over (manages layout of the window).
+        /// </summary>
+        private void manageGameOver()
+        {
+            this.gameState = GameState.END;
+            this.manageLayout();
+        }
+
+
+        /// <summary>
         /// Manages falling of the block (is called every tick of the `timerFalling`).
         /// </summary>
         private void timerFalling_Tick(object sender, EventArgs e)
@@ -311,13 +565,14 @@ namespace Tetris
                 if (!this.playGround.CheckGameOver())
                 // Game Over
                 {
-                    this.drawShape(this.playGround.actualBlock, this.playGround.actualOffset);
+                    this.drawShape(this.playGround.actualBlock,
+                                  this.playGround.actualOffset);
                     this.manageGameOver();
                     return;
                 }
 
                 this.drawNextShape(this.playGround.nextBlock);
-                
+
                 // For debuging:
                 //this.playGround.PrintMap();
             }
@@ -331,7 +586,7 @@ namespace Tetris
         /// Sets used handling possible if enough time since last input 
         /// (tick of `timerHandling`).
         /// </summary>
-        private void TimerHandling_Tick(object sender, EventArgs e)
+        private void timerHandling_Tick(object sender, EventArgs e)
         {
             this.handlingAvailable = true;
         }
@@ -392,245 +647,6 @@ namespace Tetris
 
 
         /// <summary>
-        /// Loads canvas reprezenting the playboard.
-        /// </summary>
-        private void loadCanvas()
-        {
-            // Resize the picture box based on the dotsize and canvas size.
-            this.pGameBoard.Width = this.mapWidth * this.dotSize;
-            this.pGameBoard.Height = this.mapHeight * this.dotSize;
-
-            // Create bitmap with picture box's size.
-            this.canvasBitmap = new Bitmap(this.pGameBoard.Width, 
-                                            this.pGameBoard.Height);
-
-            this.canvasGraphics = Graphics.FromImage(this.canvasBitmap);
-
-            this.canvasGraphics.FillRectangle(Brushes.LightSteelBlue, 0, 0,
-                            this.canvasBitmap.Width, this.canvasBitmap.Height);
-
-            // Load bitmap into picture box.
-            this.pGameBoard.Image = this.canvasBitmap;
-
-        }
-
-
-        /// <summary>
-        /// Draws given game object on the canvas (based on the `offset`).
-        /// </summary>
-        /// <param name="gameObject">Block to be drawn on the canvas.</param>
-        /// <param name="offset">Offset of the top-left corners of map and `gameObject`. </param>
-        private void drawShape(Block gameObject, Coordinates offset)
-        {
-            this.workingBitmap = new Bitmap(this.canvasBitmap);
-            this.workingGraphics = Graphics.FromImage(this.workingBitmap);
-
-            for (int i = 0; i < gameObject.Height; i++)
-            {
-                for (int j = 0; j < gameObject.Width; j++)
-                {
-                    // Filled cell (draw it on the canvas).
-                    if (gameObject.GetBitmapToCheck()[j,i] == GameObject.FullChar)
-                        this.workingGraphics.FillRectangle(Brushes.Black, 
-                                            (offset.X + j) * this.dotSize,
-                                            (offset.Y + i) * this.dotSize,
-                                            this.dotSize, this.dotSize);
-                }
-            }
-
-            this.pGameBoard.Image = this.workingBitmap;
-        }
-
-
-        /// <summary>
-        /// Draws playground map on the canvas.
-        /// </summary>
-        private void drawMap()
-        {
-            var bitmap = new Bitmap(this.canvasBitmap);
-            var graphics = Graphics.FromImage(bitmap);
-
-            for (int i = 0; i < this.playGround.map.Height; i++)
-            {
-                for (int j = 0; j < this.playGround.map.Width; j++)
-                {
-                    graphics.FillRectangle(
-                        this.playGround.map.Bitmap[j, i] == GameObject.FullChar 
-                        ? Brushes.Black : Brushes.LightSteelBlue,
-                        j * this.dotSize, i * this.dotSize, this.dotSize, this.dotSize);
-                }
-            }
-
-            this.canvasBitmap = new Bitmap(bitmap);
-        }
-
-
-        /// <summary>
-        /// Draws next shape into its own canvas (not playground).
-        /// </summary>
-        /// <param name="nextBlock">Block to be drawn.</param>
-        private void drawNextShape(Block nextBlock)
-        {
-            // Initialize canvas.
-            this.nextShapeGraphics.FillRectangle(Brushes.LightSteelBlue, 0, 0,
-                            this.nextShapeBitmap.Width, this.nextShapeBitmap.Height);
-
-            // Find the ideal position for the shape in the side panel.
-            var startX = (6 - nextBlock.Width) / 2;
-            var startY = (6 - nextBlock.Height) / 2;
-
-            for (int i = 0; i < nextBlock.Height; i++)
-            {
-                for (int j = 0; j < nextBlock.Width; j++)
-                {
-                    nextShapeGraphics.FillRectangle(
-                        nextBlock.GetBitmapToCheck()[j, i] == GameObject.FullChar 
-                        ? Brushes.Black : Brushes.LightSteelBlue,
-                        (startX + j) * dotSize,
-                        (startY + i) * dotSize,
-                        dotSize, dotSize);
-                }
-            }
-
-            this.pNextBlock.Size = this.nextShapeBitmap.Size;
-            this.pNextBlock.Image = this.nextShapeBitmap;
-        }
-
-
-        /// <summary>
-        /// Manages loading blocks reprezentation from the specific file.
-        /// </summary>
-        private void manageFileLoadingBlocks()
-        {
-            // Get the filename from the user. 
-            string filename = this.getReaderFile();
-
-            if (filename == null)
-            // Bad user input file -> Error
-            {
-                this.gameState = GameState.ERROR_BLOCKS;
-                return;
-            }
-
-            // Loading objects succesfull -> Return to Start Menu
-            if (this.loadGameObjects(new Reader(filename)))
-                this.gameState = GameState.START;
-        }
-
-
-        /// <summary>
-        /// Manages loading map reprezentation from the specific file.
-        /// </summary>
-        private void manageFileLoadingMap()
-        {
-            // Get the filename from the user. 
-            string filename = this.getReaderFile();
-
-            if (filename == null)
-            // Bad user input file -> Error
-            {
-                this.gameState = GameState.ERROR_MAP;
-                return;
-            }
-
-            // Loading map succesfull -> Return to Start Menu
-            if (this.loadMap(new Reader(filename)))
-                this.gameState = GameState.START;
-        }
-
-
-        /// <summary>
-        /// Opens Dialog Window and gets filename from user.
-        /// </summary>
-        /// <returns>Filename from the user (`null` if bad input).</returns>
-        private string getReaderFile()
-        {
-            OpenFileDialog openFileDialog1 = new OpenFileDialog();
-            // Show the dialog.
-            DialogResult result = openFileDialog1.ShowDialog();
-            if (result == DialogResult.OK) 
-            // Result Ok -> return filename
-            {
-                return openFileDialog1.FileName;
-            }
-
-            // Bad result.
-            return null;
-        }
-
-        /// <summary>
-        /// Loads Game Objects from the reader.
-        /// </summary>
-        /// <param name="reader">Reader to load object reprezentation.</param>
-        /// <returns>Returns `true` if loading was successful, else `false`.</returns>
-        private bool loadGameObjects(Reader reader)
-        {
-            if (reader.Error)
-            // Problem with opening the file -> Error
-            {
-                this.gameState = GameState.ERROR_BLOCKS;
-                return false;
-            }
-
-            this.playGround.LoadGameObjects(reader);
-
-            if (reader.Error)
-            // Bad file format -> Error
-            {
-                this.gameState = GameState.ERROR_BLOCKS;
-                return false;
-            }
-
-            // Loading successful.
-            return true;
-        }
-
-
-        /// <summary>
-        /// Loads map from the reader.
-        /// </summary>
-        /// <param name="reader">Reader to load map reprezentation.</param>
-        /// <returns>Returns `true` if loading was succesful, else `false`.</returns>
-        private bool loadMap(Reader reader)
-        {
-            if (reader.Error)
-            // Problem with opening the file -> Error
-            {
-                this.gameState = GameState.ERROR_MAP;
-                return false;
-            }
-
-            this.playGround.map.ResetGame();
-
-            if (!reader.ReadMap(this.playGround.map))
-            // Bad file format -> Error
-            {
-                this.gameState = GameState.ERROR_MAP;
-                return false;
-            }
-
-            this.playGround.map.SetActualDefault();
-            
-            // Loading successful.
-            return true;
-        }
-
-        /// <summary>
-        /// Checks whether some rows are filled and updates score and falling speed.
-        /// </summary>
-        private void checkFilledRows()
-        {
-            if (this.playGround.map.ManageFilledRows())
-            // Some rows were filled -> update data
-            {
-                this.drawMap();
-                this.lPoints.Text = Window.scoreText + this.playGround.map.score;
-                this.timerFalling.Interval -= 10;
-            }
-        }
-
-
-        /// <summary>
         /// Starts new game (executed after `Play` button pressed).
         /// </summary>
         private void bPlayButton_Click(object sender, EventArgs e)
@@ -638,7 +654,7 @@ namespace Tetris
             // Set all variable to new game.
             this.gameState = GameState.GAME;
             this.playGround.map.ResetGame();
-          
+
             this.manageLayout();
             this.loadCanvas();
 
@@ -658,22 +674,12 @@ namespace Tetris
                             this.nextShapeBitmap.Width, this.nextShapeBitmap.Height);
 
             this.drawNextShape(this.playGround.nextBlock);
-            
+
             // Reset the timers.
             this.timerFalling.Interval = this.timerFallingInterval;
             this.timerFalling.Start();
 
             this.timerHandling.Start();
-        }
-
-
-        /// <summary>
-        /// Executed when Game Over (manages layout of the window).
-        /// </summary>
-        private void manageGameOver()
-        {
-            this.gameState = GameState.END;
-            this.manageLayout();
         }
 
 
@@ -705,25 +711,6 @@ namespace Tetris
 
 
         /// <summary>
-        /// Returns to the Start Menu (when Return button pressed).
-        /// </summary>
-        private void bReturn_Click(object sender, EventArgs e)
-        {
-            this.gameState = GameState.START;
-            this.manageLayout();
-        }
-
-
-        /// <summary>
-        /// Ends the whole program (when End Game button pressed).
-        /// </summary>
-        private void bEndButton_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
-
-
-        /// <summary>
         /// Does proper operations when the Load Map button is pressed.
         /// Either changes the window or loads the map.
         /// </summary>
@@ -747,6 +734,25 @@ namespace Tetris
             }
 
             this.manageLayout();
+        }
+
+
+        /// <summary>
+        /// Returns to the Start Menu (when Return button pressed).
+        /// </summary>
+        private void bReturn_Click(object sender, EventArgs e)
+        {
+            this.gameState = GameState.START;
+            this.manageLayout();
+        }
+
+
+        /// <summary>
+        /// Ends the whole program (when End Game button pressed).
+        /// </summary>
+        private void bEndButton_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
     }
 }

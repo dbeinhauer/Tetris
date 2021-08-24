@@ -4,26 +4,18 @@ using System.Text;
 
 namespace Tetris
 {
+    /// <summary>
+    /// Struct representing 2D coordinates.
+    /// </summary>
     public struct Coordinates
     {
         public int X;
         public int Y;
-        public int Index;
 
-        public Coordinates(int x, int y, int width)
+        public Coordinates(int x, int y)
         {
             this.X = x;
             this.Y = y;
-
-            this.Index = y * width + x;
-        }
-
-        public Coordinates(int index, int width)
-        {
-            this.X = index % width;
-            this.Y = index / width;
-
-            this.Index = index;
         }
     }
 }

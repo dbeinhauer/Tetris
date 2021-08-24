@@ -4,22 +4,36 @@ using System.Text;
 
 namespace Tetris
 {
+    /// <summary>
+    /// Class representing the map of the game.
+    /// </summary>
     public class Map : GameObject
     {
+        // Current score of the game.
         public int score
         {
             get;
             private set;
         } = 0;
 
+        // Initial shape of the map.
         private char[,] defaultBitmap;
 
+
+        /// <summary>
+        /// </summary>
+        /// <param name="width">Width of the map.</param>
+        /// <param name="height">Height of the map.</param>
         public Map(int width, int height) : base(width, height)
         {
             this.defaultBitmap = new char[this.Width, this.Height];
             this.SetActualDefault();
         }
 
+
+        /// <summary>
+        /// Sets current map as a default (initial shape for the new game).
+        /// </summary>
         public void SetActualDefault()
         {
             for (int i = 0; i < this.Height; i++)
@@ -31,30 +45,21 @@ namespace Tetris
             }
         }
 
-        private void setDefault()
-        {
-            for (int i = 0; i < this.Height; i++)
-            {
-                for (int j = 0; j < this.Width; j++)
-                {
-                    this.Bitmap[j, i] = this.defaultBitmap[j, i];
-                }
-            }
-        }
 
         /// <summary>
         /// Adds block into the map with given offset from top-left corner of the map.
         /// </summary>
         /// <param name="block">Block to add to the map.</param>
-        /// <param name="offset">Offset of the top-left corner of the `block` from the top-left corner of the map.</param>
+        /// <param name="offset">Offset of the top-left corner of the `block` 
+        /// from the top-left corner of the map.</param>
         public void AddObject(Block block, Coordinates offset)
         {
             for (int i = 0; i < block.Height; i++)
             {
                 for (int j = 0; j < block.Width; j++)
                 {
-                    // Filled part -> rewrite the appropriate part of the map
                     if (block.GetBitmapToCheck()[j, i] == GameObject.FullChar)
+                    // Filled part -> rewrite the appropriate part of the map
                     {
                         this.AddBlock(j + offset.X, i + offset.Y);
                     }
@@ -62,20 +67,24 @@ namespace Tetris
             }
         }
 
+
+        /// <summary>
+        /// Resets the game (sets score to 0 and map to default).
+        /// </summary>
         public void ResetGame()
         {
-            //this.initMap(this.Bitmap, GameObject.EmptyChar, this.Width, this.Height);
-            //this.Bitmap = this.defaultBitmap;
             this.setDefault();
             this.score = 0;
         }
 
+
         /// <summary>
-        /// Checks whether is possible to place the `block` on the map with gíven `offset`. 
+        /// Checks whether it is possible to place the `block` on the map with gíven `offset`. 
         /// </summary>
         /// <param name="block">Block to be placed.</param>
-        /// <param name="offset">Offset of the top-left corner of the block from the top-left corner of the map.</param>
-        /// <returns></returns>
+        /// <param name="offset">Offset of the top-left corner of the 
+        /// block from the top-left corner of the map.</param>
+        /// <returns>Returns `true` if adding is possible, else `false`.</returns>
         public bool CheckBlockPossible(Block block, Coordinates offset)
         {
             // Overflow of the map borders -> not possible
@@ -103,9 +112,10 @@ namespace Tetris
             return true;
         }
 
+
         /// <summary>
         /// Checks whether some row is filled by the blocks, if so removes such row and 
-        /// moves part above the row down by 1 row (possible repetition if more sufficien rows).
+        /// moves part above the row down by 1 row (possible repetition if more suitable rows).
         /// </summary>
         /// <returns>Returns `true` if some row was filled and map changed, else `false`.</returns>
         public bool ManageFilledRows()
@@ -114,7 +124,8 @@ namespace Tetris
             for (int i = 0; i < this.Height; i++)
             {
                 if (this.isFilledRow(i))
-                // Actual row is fully filled with the blocks.
+                // Actual row is fully filled with the blocks 
+                // -> move upper part down and increase the score
                 {
                     this.movePartDown(i);
                     wasMoved = true;
@@ -123,6 +134,21 @@ namespace Tetris
             }
 
             return wasMoved;
+        }
+
+
+        /// <summary>
+        /// Sets the bitmap to default (when starting the new game).
+        /// </summary>
+        private void setDefault()
+        {
+            for (int i = 0; i < this.Height; i++)
+            {
+                for (int j = 0; j < this.Width; j++)
+                {
+                    this.Bitmap[j, i] = this.defaultBitmap[j, i];
+                }
+            }
         }
 
         /// <summary>
@@ -144,11 +170,14 @@ namespace Tetris
         }
 
         /// <summary>
-        /// Moves whole upper part down by 1 step (we just delete the given row). Usage when given row is fully filled.
+        /// Moves whole upper part down by 1 step (we just delete the given row). 
+        /// Usage when given row is fully filled.
         /// </summary>
-        /// <param name="bottomRow">Bootom border coordinate (move each row with smaller coordinate).</param>
+        /// <param name="bottomRow">Bootom border coordinate 
+        /// (move each row with smaller coordinate (above the row).</param>
         private void movePartDown(int bottomRow)
         {
+            // Move upper part down by 1 step.
             for (int i = bottomRow - 1; i > -1; i--)
             {
                 for (int j = 0; j < this.Width; j++)

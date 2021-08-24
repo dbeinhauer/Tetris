@@ -4,7 +4,10 @@ using System.Text;
 
 namespace Tetris
 {
-    public class GameObject
+    /// <summary>
+    /// Abstract class to include all common features of the map and Block.
+    /// </summary>
+    public abstract class GameObject
     {
         // Object bitmap representations.
         static public char EmptyChar = '.';
@@ -30,7 +33,6 @@ namespace Tetris
         }
 
         /// <summary>
-        /// Initialises object.
         /// </summary>
         /// <param name="width">Width of the object.</param>
         /// <param name="height">Height of the object.</param>
@@ -54,7 +56,7 @@ namespace Tetris
         }
 
         /// <summary>
-        /// Initializes the bitmap of the obeject (all positions are empty).
+        /// Initializes the bitmap of the object (all positions are empty).
         /// </summary>
         /// <param name="bitmap">Bitmap to be initialized.</param>
         /// <param name="emptyChar">Character representing empty block.</param>

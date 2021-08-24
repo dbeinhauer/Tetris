@@ -7,7 +7,7 @@ using System.IO;
 namespace Tetris
 {
     /// <summary>
-    /// Class to read the setup file with blocks definition.
+    /// Class to read the setup file with blocks or map definition.
     /// </summary>
     public class Reader
     {
@@ -19,13 +19,12 @@ namespace Tetris
         } = false;
 
 
-
-        private string filename = null;
-
         // Input reader
         private TextReader textReader = null;
 
+        // Last readed line
         private string lastLine = "";
+
 
         /// <summary>
         /// Initializes the `Reader` object with filestream input.
@@ -33,8 +32,6 @@ namespace Tetris
         /// <param name="filename">Name of the input file.</param>
         public Reader(string filename)
         {
-            this.filename = filename;
-
             try
             {
                 this.textReader = new StreamReader(filename);
@@ -49,8 +46,10 @@ namespace Tetris
             }
         }
 
+
         /// <summary>
-        /// Initializes the `Reader` object with given `TextReader` input (mainly for the testing (`StringReader`)).
+        /// Initializes the `Reader` object with given `TextReader` input 
+        /// (mainly for the testing (`StringReader`)).
         /// </summary>
         /// <param name="textReader">`TextReader` object to read input from.</param>
         public Reader(TextReader textReader)
@@ -58,107 +57,59 @@ namespace Tetris
             this.textReader = textReader;
         }
 
+
         /// <summary>
         /// Reads all game objects from the given input.
         /// </summary>
-        /// <returns>Dictionary of the all game objects, where key is ID of the object and value is its representation.</returns>
-        //public Dictionary<decimal, Block> ReadAllBlocks()
+        /// <returns>Array of the all game objects.</returns>
         public Block[] ReadAllBlocks()
         {
-            //decimal id = 0;
-            //Dictionary<decimal, Block> allBlocks = new Dictionary<decimal, Block>();
-
             Block[] allBlocks = this.readNumBlocks();
 
             if (allBlocks == null)
+            // Missig number of blocks in file (or other problem) -> Error
             {
                 this.Error = true;
                 return null;
             }
 
+            // Read all blocks (number of blocks is from input file).
             for (int i = 0; i < allBlocks.Length; i++)
             {
-                var block = this.readBlock();//id);
+                var block = this.readBlock();
 
                 // Error during the object reading.
                 if (this.Error)
                     return null;
 
-                // Missing part of the input
+
                 if (block == null)
+                // Missing part of the input
                 {
                     this.Error = true;
                     return null;
                 }
-                    //return allBlocks;
 
                 block.InitRotationsShapes();
                 allBlocks[i] = block;
-                //id++;
             }
 
             return allBlocks;
         }
 
+
+        /// <summary>
+        /// Reads bitmap of the Map reprezentation from the input.
+        /// </summary>
+        /// <param name="map">Map to assign its bitmap 
+        /// (input file has to be in the correct format (same width and height).</param>
+        /// <returns>Returns `true` if reading was successful, else `false`.</returns>
         public bool ReadMap(Map map)
         {
             this.skipNonSetup();
             return this.readObjectShape(map);
         }
 
-        private Block[] readNumBlocks()
-        {
-            this.skipNonSetup();
-
-            if (this.lastLine == null)
-                return null;
-
-            var parsedLine = this.lastLine.Trim().Split(' ');
-
-            int numBlocks;
-
-            if (int.TryParse(parsedLine[0], out numBlocks))
-            {
-                return new Block[numBlocks];
-            }
-
-            return null;
-        }
-
-        /// <summary>
-        /// Reads one Block representation from the input.
-        /// </summary>
-        /// <param name="id">ID of the current GameObject.</param>
-        /// <returns>Returns GameObject sets up from the input representation or 
-        /// `null` if end of the input or error happens (if error, then sets `this.Error` to true).</returns>
-        private Block readBlock()//decimal id)
-        {
-            this.skipNonSetup();
-
-            // End of the input.
-            if (this.lastLine == null)
-                return null;
-
-            Block block = this.readObjectSize();//id);
-
-            this.lastLine = this.textReader.ReadLine();
-
-            if (block == null)
-            // Error in size setup.
-            {
-                this.Error = true;
-                return null;
-            }
-
-            if (!readObjectShape(block))
-            // Error in shape setup.
-            {
-                this.Error = true;
-                return null;
-            }
-
-            return block;
-        }
 
         /// <summary>
         /// Skips all non setup lines (with only whitespaces or comments which starts with '%').
@@ -182,12 +133,76 @@ namespace Tetris
             }
         }
 
+
         /// <summary>
-        /// Reads size setup of the object from the input (assumes that `this.lastLine` is not `null`).
+        /// Reads number of blocks to read from the input 
+        /// (first line of the input reprezentation).
         /// </summary>
-        /// <param name="id">ID of the current Block.</param>
-        /// <returns>Initialized Block with size or `null` if error happened.</returns>
-        private Block readObjectSize()//decimal id)
+        /// <returns>Array of the Blocks with proper lenght (from the input).</returns>
+        private Block[] readNumBlocks()
+        {
+            this.skipNonSetup();
+
+            // Missing information about the number of blocks.
+            if (this.lastLine == null)
+                return null;
+
+            var parsedLine = this.lastLine.Trim().Split(' ');
+
+            int numBlocks;
+
+            if (int.TryParse(parsedLine[0], out numBlocks))
+            // Correct input format -> create proper array
+            {
+                return new Block[numBlocks];
+            }
+
+            // Bad format -> Error
+            return null;
+        }
+
+
+        /// <summary>
+        /// Reads one Block representation from the input.
+        /// </summary>
+        /// <returns>Returns GameObject sets up from the input representation or `null` 
+        /// if end of the input or error happens (if error, then sets `this.Error` to true).</returns>
+        private Block readBlock()
+        {
+            this.skipNonSetup();
+
+            // End of the input.
+            if (this.lastLine == null)
+                return null;
+
+            Block block = this.readObjectSize();
+
+            this.lastLine = this.textReader.ReadLine();
+
+            if (block == null)
+            // Error in size setup.
+            {
+                this.Error = true;
+                return null;
+            }
+
+            if (!readObjectShape(block))
+            // Error in shape setup.
+            {
+                this.Error = true;
+                return null;
+            }
+
+            return block;
+        }
+
+
+        /// <summary>
+        /// Reads size setup of the object from the input 
+        /// (assumes that `this.lastLine` is not `null`).
+        /// </summary>
+        /// <returns>Returns initialized current Block or `null` if error happened.</returns>
+        private Block readObjectSize()
         {
             var parsedLine = this.lastLine.Trim().Split(' ');
 
@@ -201,23 +216,22 @@ namespace Tetris
 
             // If both parameters are integers -> good input (set new GameObject).
             if (int.TryParse(parsedLine[0], out width) && int.TryParse(parsedLine[1], out height))
-                block = new Block(width, height);//, id);
+                block = new Block(width, height);
 
             return block;
         }
+
 
         /// <summary>
         /// Reads object shape bitmap representation.
         /// </summary>
         /// <param name="block">Current object to read.</param>
-        /// <returns>Returns `true` if reading was succesfull, `false` if error happened.</returns>
+        /// <returns>Returns `true` if reading was successful, `false` if error happened.</returns>
         private bool readObjectShape(GameObject block)
         {
             for (int i = 0; i < block.Height; i++)
             // For each line of the object.
             {
-                //this.lastLine = this.textReader.ReadLine();
-
                 // Missing row -> error
                 if (this.lastLine == null)
                     return false;
@@ -232,9 +246,11 @@ namespace Tetris
                 if (!this.readOneLineObject(block, this.lastLine, i))
                     return false;
 
+                // Read following line
                 this.lastLine = this.textReader.ReadLine();
             }
 
+            // Reading was successful.
             return true;
         }
 
@@ -242,9 +258,10 @@ namespace Tetris
         /// Reads one line of the object shape representation.
         /// </summary>
         /// <param name="block">Object to read its shape.</param>
-        /// <param name="line">Last readed line from the input (representation to get info from).</param>
+        /// <param name="line">Last readed line from the input 
+        /// (representation to get info from).</param>
         /// <param name="lineId">Id of the actually readed line (counting from 0).</param>
-        /// <returns>Returns `true` if reading was succesfull, else `false`.</returns>
+        /// <returns>Returns `true` if reading was successful, else `false`.</returns>
         private bool readOneLineObject(GameObject block, string line, int lineId)
         {
             for (int i = 0; i < block.Width; i++)
@@ -260,10 +277,11 @@ namespace Tetris
                     continue;
                 }
 
-                // Invalid char representation.
+                // Invalid char representation -> Error
                 return false;
             }
 
+            // Reading was successful.
             return true;
         }
     }

@@ -4,6 +4,9 @@ using System.Text;
 
 namespace Tetris
 {
+    /// <summary>
+    /// All possible rotations.
+    /// </summary>
     public enum Rotation
     {
         ROTATION_0,
@@ -12,23 +15,20 @@ namespace Tetris
         ROTATION_270
     }
 
+    /// <summary>
+    /// Class representing the game block (movable game object).
+    /// </summary>
     public class Block : GameObject
     {
-        // ID of the object.
-        //public decimal Id
-        //{
-        //    get;
-        //    private set;
-        //}
-
-       
+        // Current rotation of the block.
         public Rotation ActualRotation
         {
             get;
             private set;
         }
 
-        // Bitmaps of each rotation
+
+        // Bitmaps of each rotation.
         public char[,] Bitmap90
         {
             get;
@@ -48,15 +48,19 @@ namespace Tetris
         }
 
 
-
+        /// <summary>
+        /// </summary>
+        /// <param name="width">Width of the block.</param>
+        /// <param name="height">Height of the block.</param>
         public Block(int width, int height) : base(width, height)
         {
-            //this.Id = id;
             this.ActualRotation = Rotation.ROTATION_0;
         }
 
+
         /// <summary>
-        /// Initializes Bitmaps for each rotation (should be called after fulli initialized classic `Bitmap`.
+        /// Initializes Bitmaps for each rotation.
+        /// (should be called after fully initialized original `Bitmap`).
         /// </summary>
         public void InitRotationsShapes()
         {
@@ -71,10 +75,11 @@ namespace Tetris
             this.initRotations();
         }
 
+
         /// <summary>
-        /// Finds actual bitmap and returns it.
+        /// Finds current bitmap and returns it.
         /// </summary>
-        /// <returns>Returns actual bitmap of the object.</returns>
+        /// <returns>Returns current bitmap of the object.</returns>
         public char[,] GetBitmapToCheck()
         {
             switch (this.ActualRotation)
@@ -92,8 +97,9 @@ namespace Tetris
             }
         }
 
+
         /// <summary>
-        /// Simulates rotation to left (chages appropriate parameters).
+        /// Simulates rotation to left (changes appropriate parameters).
         /// </summary>
         public void RotateLeft()
         {
@@ -121,8 +127,9 @@ namespace Tetris
             }
         }
 
+
         /// <summary>
-        /// Simulates rotation to right (chages appropriate parameters).
+        /// Simulates rotation to right (changes appropriate parameters).
         /// </summary>
         public void RotateRight()
         {
@@ -150,6 +157,7 @@ namespace Tetris
             }
         }
 
+
         /// <summary>
         /// Computes bitmap for each rotation (uses fact that after each rotation to left
         /// `y` coordinate becomes `x` coordinate and new `y` coordinate is reversed `x` coordinate).
@@ -163,13 +171,11 @@ namespace Tetris
                     int reversedX = this.Width - x - 1;
                     int reversedY = this.Height - y - 1;
 
-                    // after rotation to left:   from (x, y) -> (y, reversed x)
+                    // After rotation to left:   from (x, y) -> (y, reversed x)
                     // Where:       reversed x = (maximal x coordinate) - (actual x)
-                    //this.Bitmap90[y, reversedX] = this.Bitmap[x, y];
                     this.Bitmap90[y, reversedX] = this.Bitmap[x, y];
                     this.Bitmap180[reversedX, reversedY] = this.Bitmap[x, y];
                     this.Bitmap270[reversedY, x] = this.Bitmap[x, y];
-                    //this.Bitmap270[reversedY, x]  = this.Bitmap[x, y];
                 }
             }
         }

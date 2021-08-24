@@ -20,8 +20,6 @@ namespace Tetris
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Window());
-
-            //Reader reader = new Reader("Game_Blocks/Default_Objects.txt");
         }
     }
 }
