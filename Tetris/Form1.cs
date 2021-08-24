@@ -13,8 +13,10 @@ namespace Tetris
     enum GameState
     {
         START,
-        LOADING,
-        ERROR,
+        LOADING_BLOCKS,
+        LOADING_MAP,
+        ERROR_BLOCKS,
+        ERROR_MAP,
         GAME,
         END
     }
@@ -64,17 +66,9 @@ namespace Tetris
 
             Reader reader = new Reader("GameBlocks/Default_Objects.txt");
 
+            this.playGround = new PlayGround(mapWidth, mapHeight);
+
             this.loadGameObjects(reader);
-
-
-            //this.playGround = new PlayGround(mapWidth, mapHeight);
-            //this.playGround.LoadGameObjects(reader);
-
-            //if (reader.Error)
-            //{
-            //    this.gameState = GameState.ERROR;
-            //    this.handleDisplay();
-            //}
         }
 
         private void handleDisplay()
@@ -87,44 +81,88 @@ namespace Tetris
                     this.lMainTitle.Show();
                     this.lPoints.Hide();
                     this.lLoadingBlocksLabel.Hide();
+                    this.lLoadingMapLabel.Hide();
                     this.lNextBlock.Hide();
-                    this.lErrorMessage.Hide();
+                    //this.lErrorMessage.Hide();
                     this.lGameOver.Hide();
                     this.bPlayButton.Show();
                     this.bLoadBlocks.Show();
+                    this.bLoadMap.Show();
                     this.bReturn.Hide();
                     this.bEndButton.Show();
-                    this.tbLoadingBlocksTextBox.Hide();
+                    //this.tbLoadingBlocksTextBox.Hide();
                     break;
-                case GameState.LOADING:
+                case GameState.LOADING_BLOCKS:
                     this.pGameBoard.Hide();
                     this.pNextBlock.Hide();
                     this.lMainTitle.Hide();
                     this.lPoints.Hide();
                     this.lLoadingBlocksLabel.Show();
+                    this.lLoadingMapLabel.Hide();
                     this.lNextBlock.Hide();
-                    this.lErrorMessage.Hide();
+                    //this.lErrorMessage.Hide();
                     this.lGameOver.Hide();
                     this.bPlayButton.Hide();
                     this.bLoadBlocks.Show();
+                    this.bLoadMap.Hide();
                     this.bReturn.Show();
                     this.bEndButton.Hide();
-                    this.tbLoadingBlocksTextBox.Show();
+                    //this.tbLoadingBlocksTextBox.Show();
                     break;
-                case GameState.ERROR:
+                case GameState.LOADING_MAP:
+                    this.pGameBoard.Hide();
+                    this.pNextBlock.Hide();
+                    this.lMainTitle.Hide();
+                    this.lPoints.Hide();
+                    this.lLoadingBlocksLabel.Hide();
+                    this.lLoadingMapLabel.Show();
+                    this.lNextBlock.Hide();
+                    //this.lErrorMessage.Hide();
+                    this.lGameOver.Hide();
+                    this.bPlayButton.Hide();
+                    this.bLoadBlocks.Hide();
+                    this.bLoadMap.Show();
+                    this.bReturn.Show();
+                    this.bEndButton.Hide();
+                    //this.tbLoadingBlocksTextBox.Show();
+                    break;
+                case GameState.ERROR_BLOCKS:
                     this.pGameBoard.Hide();
                     this.pNextBlock.Hide();
                     this.lMainTitle.Hide();
                     this.lPoints.Hide();
                     this.lLoadingBlocksLabel.Show();
+                    this.lLoadingMapLabel.Hide();
                     this.lNextBlock.Hide();
-                    this.lErrorMessage.Show();
+                    //this.lErrorMessage.Show();
                     this.lGameOver.Hide();
                     this.bPlayButton.Hide();
                     this.bLoadBlocks.Show();
+                    this.bLoadMap.Hide();
                     this.bReturn.Hide();
                     this.bEndButton.Show();
-                    this.tbLoadingBlocksTextBox.Show();
+                    //this.tbLoadingBlocksTextBox.Show();
+
+                    MessageBox.Show("Please add correct input file.", "Bad File Format", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    break;
+                case GameState.ERROR_MAP:
+                    this.pGameBoard.Hide();
+                    this.pNextBlock.Hide();
+                    this.lMainTitle.Hide();
+                    this.lPoints.Hide();
+                    this.lLoadingBlocksLabel.Hide();
+                    this.lLoadingMapLabel.Show();
+                    this.lNextBlock.Hide();
+                    //this.lErrorMessage.Show();
+                    this.lGameOver.Hide();
+                    this.bPlayButton.Hide();
+                    this.bLoadBlocks.Hide();
+                    this.bLoadMap.Show();
+                    this.bReturn.Hide();
+                    this.bEndButton.Show();
+                    //this.tbLoadingBlocksTextBox.Show();
+
+                    MessageBox.Show("Please add correct input file.", "Bad File Format", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     break;
                 case GameState.GAME:
                     this.pGameBoard.Show();
@@ -132,14 +170,16 @@ namespace Tetris
                     this.lMainTitle.Show();
                     this.lPoints.Show();
                     this.lLoadingBlocksLabel.Hide();
+                    this.lLoadingMapLabel.Hide();
                     this.lNextBlock.Show();
-                    this.lErrorMessage.Hide();
+                    //this.lErrorMessage.Hide();
                     this.lGameOver.Hide();
                     this.bPlayButton.Hide();
                     this.bLoadBlocks.Hide();
+                    this.bLoadMap.Hide();
                     this.bReturn.Hide();
                     this.bEndButton.Hide();
-                    this.tbLoadingBlocksTextBox.Hide();
+                    //this.tbLoadingBlocksTextBox.Hide();
 
                     this.lPoints.Text = Window.scoreText + this.playGround.map.score;
                     break;
@@ -149,14 +189,16 @@ namespace Tetris
                     this.lMainTitle.Show();
                     this.lPoints.Show();
                     this.lLoadingBlocksLabel.Hide();
+                    this.lLoadingMapLabel.Hide();
                     this.lNextBlock.Show();
-                    this.lErrorMessage.Hide();
+                    //this.lErrorMessage.Hide();
                     this.lGameOver.Show();
                     this.bPlayButton.Show();
                     this.bLoadBlocks.Hide();
+                    this.bLoadMap.Hide();
                     this.bReturn.Hide();
                     this.bEndButton.Show();
-                    this.tbLoadingBlocksTextBox.Hide();
+                    //this.tbLoadingBlocksTextBox.Hide();
                     break;
                 default:
                     break;
@@ -251,7 +293,7 @@ namespace Tetris
 
             canvasGraphics = Graphics.FromImage(canvasBitmap);
 
-            canvasGraphics.FillRectangle(Brushes.LightGray, 0, 0, canvasBitmap.Width, canvasBitmap.Height);
+            canvasGraphics.FillRectangle(Brushes.LightSteelBlue, 0, 0, canvasBitmap.Width, canvasBitmap.Height);
 
             // load bitmap into picture box
             pGameBoard.Image = canvasBitmap;
@@ -269,8 +311,6 @@ namespace Tetris
                 {
                     if (gameObject.GetBitmapToCheck()[j,i] == GameObject.FullChar)
                         workingGraphics.FillRectangle(Brushes.Black, (offset.X + j) * dotSize, (offset.Y + i) * dotSize, dotSize, dotSize);
-                    //else
-                    //    workingGraphics.FillRectangle(Brushes.LightGray, (offset.X + i) * dotSize, (offset.Y + j) * dotSize, dotSize, dotSize);
                 }
             }
 
@@ -287,7 +327,7 @@ namespace Tetris
                 for (int j = 0; j < this.playGround.map.Width; j++)
                 {
                     graphics.FillRectangle(
-                        this.playGround.map.Bitmap[j, i] == GameObject.FullChar ? Brushes.Black : Brushes.LightGray,
+                        this.playGround.map.Bitmap[j, i] == GameObject.FullChar ? Brushes.Black : Brushes.LightSteelBlue,
                         j * dotSize, i * dotSize, dotSize, dotSize);
                 }
             }
@@ -297,7 +337,7 @@ namespace Tetris
 
         private void drawNextShape(Block nextBlock)
         {
-            nextShapeGraphics.FillRectangle(Brushes.LightGray, 0, 0, nextShapeBitmap.Width, nextShapeBitmap.Height);
+            nextShapeGraphics.FillRectangle(Brushes.LightSteelBlue, 0, 0, nextShapeBitmap.Width, nextShapeBitmap.Height);
 
             // Find the ideal position for the shape in the side panel
             var startX = (6 - nextBlock.Width) / 2;
@@ -308,7 +348,7 @@ namespace Tetris
                 for (int j = 0; j < nextBlock.Width; j++)
                 {
                     nextShapeGraphics.FillRectangle(
-                        nextBlock.GetBitmapToCheck()[j, i] == GameObject.FullChar ? Brushes.Black : Brushes.LightGray,
+                        nextBlock.GetBitmapToCheck()[j, i] == GameObject.FullChar ? Brushes.Black : Brushes.LightSteelBlue,
                         (startX + j) * dotSize, (startY + i) * dotSize, dotSize, dotSize);
                 }
             }
@@ -317,31 +357,91 @@ namespace Tetris
             pNextBlock.Image = nextShapeBitmap;
         }
 
+        private void handleFileLoadingBlocks()
+        {
+            string filename = this.getReaderFile();
+            if (filename == null)
+            {
+                this.gameState = GameState.ERROR_BLOCKS;
+                return;
+            }
+
+            if (this.loadGameObjects(new Reader(filename)))
+            {
+                this.gameState = GameState.START;
+            }
+        }
+
+        private void handleFileLoadingMap()
+        {
+            string filename = this.getReaderFile();
+            if (filename == null)
+            {
+                this.gameState = GameState.ERROR_MAP;
+                return;
+            }
+
+            if (this.loadMap(new Reader(filename)))//new Reader(this.tbLoadingBlocksTextBox.Text)))
+            {
+                this.gameState = GameState.START;
+            }
+
+            //this.tbLoadingBlocksTextBox.Clear();
+        }
+
+        private string getReaderFile()
+        {
+            OpenFileDialog openFileDialog1 = new OpenFileDialog();
+            DialogResult result = openFileDialog1.ShowDialog(); // Show the dialog.
+            if (result == DialogResult.OK) // Test result.
+            {
+                return openFileDialog1.FileName;
+            }
+
+            return null;
+        }
+
         private bool loadGameObjects(Reader reader)
         {
             if (reader.Error)
             {
-                this.gameState = GameState.ERROR;
-                this.handleDisplay();
+                this.gameState = GameState.ERROR_BLOCKS;
+                //this.handleDisplay();
                 return false;
             }
 
-            this.playGround = new PlayGround(mapWidth, mapHeight);
+            //this.playGround = new PlayGround(mapWidth, mapHeight);
             this.playGround.LoadGameObjects(reader);
 
             if (reader.Error)
             {
-                this.gameState = GameState.ERROR;
-                this.handleDisplay();
+                this.gameState = GameState.ERROR_BLOCKS;
+                //this.handleDisplay();
                 return false;
             }
 
             return true;
-            //else if (this.gameState == GameState.ERROR)
-            //{
-            //    this.gameState = GameState.LOADING;
-            //    this.handleDisplay();
-            //}
+        }
+
+        private bool loadMap(Reader reader)
+        {
+            if (reader.Error)
+            {
+                this.gameState = GameState.ERROR_MAP;
+                return false;
+            }
+
+            this.playGround.map.ResetGame();
+
+            if (!reader.ReadMap(this.playGround.map))
+            {
+                this.gameState = GameState.ERROR_MAP;
+                return false;
+            }
+
+            this.playGround.map.SetActualDefault();
+
+            return true;
         }
 
         private void lPoints_Click(object sender, EventArgs e)
@@ -355,19 +455,23 @@ namespace Tetris
             this.playGround.map.ResetGame();
             this.handleDisplay();
 
+            this.loadcanvas();
+
             this.playGround.GenerateNextBlock();
             this.playGround.CheckGameOver();
+
+            this.drawMap();
+            this.drawShape(this.playGround.actualBlock, this.playGround.actualOffset);
 
             // Codes to show the next shape in the side panel
             nextShapeBitmap = new Bitmap(6 * dotSize, 6 * dotSize);
             nextShapeGraphics = Graphics.FromImage(nextShapeBitmap);
 
-            nextShapeGraphics.FillRectangle(Brushes.LightGray, 0, 0, nextShapeBitmap.Width, nextShapeBitmap.Height);
+            nextShapeGraphics.FillRectangle(Brushes.LightSteelBlue, 0, 0, nextShapeBitmap.Width, nextShapeBitmap.Height);
 
-
+            //this.drawShape(this.playGround.actualBlock, this.playGround.actualOffset);
             this.drawNextShape(this.playGround.nextBlock);
 
-            this.loadcanvas();
             timer.Tick += Timer_Tick;
             timer.Interval = 500;
             timer.Start();
@@ -388,29 +492,20 @@ namespace Tetris
             switch (this.gameState)
             {
                 case GameState.START:
-                    this.gameState = GameState.LOADING;
+                    this.gameState = GameState.LOADING_BLOCKS;
                     break;
-                case GameState.END:
-                    this.gameState = GameState.LOADING;
+                //case GameState.END:
+                //    this.gameState = GameState.LOADING_BLOCKS;
+                //    break;
+                case GameState.LOADING_BLOCKS:
+                    this.handleFileLoadingBlocks();
                     break;
-                case GameState.LOADING:
-                    if (this.loadGameObjects(new Reader(this.tbLoadingBlocksTextBox.Text)))
-                    {
-                        this.gameState = GameState.START;
-                    }
-                    this.tbLoadingBlocksTextBox.Clear();
-                    break;
-                case GameState.ERROR:
-                    if (this.loadGameObjects(new Reader(this.tbLoadingBlocksTextBox.Text)))
-                    {
-                        this.gameState = GameState.START;
-                    }
-                    this.tbLoadingBlocksTextBox.Clear();
+                case GameState.ERROR_BLOCKS:
+                    this.handleFileLoadingBlocks();
                     break;
                 default:
                     break;
             }
-            //this.gameState = GameState.LOADING;
             this.handleDisplay();
         }
 
@@ -430,16 +525,30 @@ namespace Tetris
 
         private void tbLoadingBlocksTextBox_Enter(object sender, EventArgs e)
         {
-            //Reader reader = new Reader(this.tbLoadingBlocksTextBox.Text);
+        }
 
-            //this.playGround = new PlayGround(mapWidth, mapHeight);
-            //this.playGround.LoadGameObjects(reader);
+        private void lGameOver_Click(object sender, EventArgs e)
+        {
 
-            //if (reader.Error)
-            //{
-            //    this.gameState = GameState.ERROR;
-            //    this.handleDisplay();
-            //}
+        }
+
+        private void bLoadMap_Click(object sender, EventArgs e)
+        {
+            switch (this.gameState)
+            {
+                case GameState.START:
+                    this.gameState = GameState.LOADING_MAP;
+                    break;
+                case GameState.LOADING_MAP:
+                    this.handleFileLoadingMap();
+                    break;
+                case GameState.ERROR_MAP:
+                    this.handleFileLoadingMap();
+                    break;
+                default:
+                    break;
+            }
+            this.handleDisplay();
         }
     }
 }

@@ -12,9 +12,34 @@ namespace Tetris
             private set;
         } = 0;
 
+        private char[,] defaultBitmap;
+
         public Map(int width, int height) : base(width, height)
         {
+            this.defaultBitmap = new char[this.Width, this.Height];
+            this.SetActualDefault();
+        }
 
+        public void SetActualDefault()
+        {
+            for (int i = 0; i < this.Height; i++)
+            {
+                for (int j = 0; j < this.Width; j++)
+                {
+                    this.defaultBitmap[j, i] = this.Bitmap[j, i];
+                }
+            }
+        }
+
+        private void setDefault()
+        {
+            for (int i = 0; i < this.Height; i++)
+            {
+                for (int j = 0; j < this.Width; j++)
+                {
+                    this.Bitmap[j, i] = this.defaultBitmap[j, i];
+                }
+            }
         }
 
         /// <summary>
@@ -39,7 +64,9 @@ namespace Tetris
 
         public void ResetGame()
         {
-            this.initMap(this.Bitmap, GameObject.EmptyChar, this.Width, this.Height);
+            //this.initMap(this.Bitmap, GameObject.EmptyChar, this.Width, this.Height);
+            //this.Bitmap = this.defaultBitmap;
+            this.setDefault();
             this.score = 0;
         }
 

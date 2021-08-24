@@ -98,28 +98,12 @@ namespace Tetris
             }
 
             return allBlocks;
+        }
 
-
-
-            //while (!this.Error && this.lastLine != null)
-            //// Reads the whole input or until error occurs.
-            //{
-            //    var block = this.readBlock();//id);
-
-            //    // Error during the object reading.
-            //    if (this.Error)
-            //        return null;
-
-            //    // End of the input.
-            //    if (block == null)
-            //        return allBlocks;
-
-            //    block.InitRotationsShapes();
-            //    allBlocks.Add(id, block);
-            //    id++;
-            //}
-
-            //return allBlocks;
+        public bool ReadMap(Map map)
+        {
+            this.skipNonSetup();
+            return this.readObjectShape(map);
         }
 
         private Block[] readNumBlocks()
@@ -156,6 +140,8 @@ namespace Tetris
                 return null;
 
             Block block = this.readObjectSize();//id);
+
+            this.lastLine = this.textReader.ReadLine();
 
             if (block == null)
             // Error in size setup.
@@ -225,12 +211,12 @@ namespace Tetris
         /// </summary>
         /// <param name="block">Current object to read.</param>
         /// <returns>Returns `true` if reading was succesfull, `false` if error happened.</returns>
-        private bool readObjectShape(Block block)
+        private bool readObjectShape(GameObject block)
         {
             for (int i = 0; i < block.Height; i++)
             // For each line of the object.
             {
-                this.lastLine = this.textReader.ReadLine();
+                //this.lastLine = this.textReader.ReadLine();
 
                 // Missing row -> error
                 if (this.lastLine == null)
@@ -245,6 +231,8 @@ namespace Tetris
                 // Check if error during line reading happened.
                 if (!this.readOneLineObject(block, this.lastLine, i))
                     return false;
+
+                this.lastLine = this.textReader.ReadLine();
             }
 
             return true;
@@ -257,7 +245,7 @@ namespace Tetris
         /// <param name="line">Last readed line from the input (representation to get info from).</param>
         /// <param name="lineId">Id of the actually readed line (counting from 0).</param>
         /// <returns>Returns `true` if reading was succesfull, else `false`.</returns>
-        private bool readOneLineObject(Block block, string line, int lineId)
+        private bool readOneLineObject(GameObject block, string line, int lineId)
         {
             for (int i = 0; i < block.Width; i++)
             {
