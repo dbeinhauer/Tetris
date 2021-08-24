@@ -77,7 +77,6 @@
             this.lGameOver.Size = new System.Drawing.Size(483, 98);
             this.lGameOver.TabIndex = 2;
             this.lGameOver.Text = "Game Over";
-            this.lGameOver.Click += new System.EventHandler(this.lGameOver_Click);
             // 
             // bPlayButton
             // 
@@ -125,7 +124,6 @@
             this.lPoints.Size = new System.Drawing.Size(106, 38);
             this.lPoints.TabIndex = 7;
             this.lPoints.Text = "Points:";
-            this.lPoints.Click += new System.EventHandler(this.lPoints_Click);
             // 
             // lLoadingBlocksLabel
             // 
