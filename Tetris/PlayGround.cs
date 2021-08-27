@@ -165,7 +165,7 @@ namespace Tetris
 
 
         /// <summary>
-        /// Print actual map state into the stdin (for debuging).
+        /// Prints actual map state into the stdin (for debuging).
         /// </summary>
         public void PrintMap()
         {
